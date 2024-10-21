@@ -1,6 +1,6 @@
 # Pizza Project - Fast Food Ordering Kiosk
 
-This project involves creating an ordering kiosk inspired by fast-food restaurants. The customer can browse the menu, add products to their cart, and place an order. The frontend is built with React, and the backend with Node.js, available on GitHub.
+This project involves creating an ordering kiosk inspired by fast-food restaurants. The customer can browse the menu, add products to their cart, and place an order. The administrator will be able to add a product, display it on the map and modify the prices. This last option will affect the persistence of historical data. The frontend is built with React, and the backend with Node.js, available on GitHub.
 
 ## Prerequisites
 
