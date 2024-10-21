@@ -9,22 +9,9 @@ const Orders = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetchProducts();
-                console.log("Réponse de fetchProducts:", res); // Affiche la structure de la réponse
-
-                if (Array.isArray(res)) {
+                const res = await fetchProducts();          
                     setProducts(res);
-                } else if (typeof res === 'object' && res !== null) {
-                    // Si la réponse est un objet, essayez de trouver un tableau de produits à l'intérieur
-                    const productsArray = Object.values(res).find(Array.isArray);
-                    if (productsArray) {
-                        setProducts(productsArray);
-                    } else {
-                        console.error("Impossible de trouver un tableau de produits dans la réponse", res);
-                    }
-                } else {
-                    console.error("La réponse n'est pas un tableau ni un objet", res);
-                }
+             
             } catch (error) {
                 console.error("Erreur lors de la récupération des produits", error);
             }
@@ -34,7 +21,7 @@ const Orders = () => {
     }, []);
    
     return (
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-yellow-50 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
             ))}
