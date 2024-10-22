@@ -8,3 +8,14 @@ export interface Product {
     type_id?: number;             
     prix_id?: number;             
 }
+
+export interface Type {
+    id: number;
+    nomtype: string;
+}
+
+export interface Button {
+    label: string;           
+    onClick: () => void;     
+    className?: string;     
+}

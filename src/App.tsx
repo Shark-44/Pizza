@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import './App.css'
-import Banner from "./components/Banner"
+import Banner from "./components/specificPageComponents/Banner"
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
 
