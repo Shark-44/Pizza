@@ -6,7 +6,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        dancing: ['"Dancing Script"', 'cursive'], 
+        dancing: ['"Dancing Script"', 'cursive'],
+        satisfy: ['"Satisfy"', 'cursive'],
+      },
+      colors: {
+        customOrange: '#e69623', 
       },
     },
   },
