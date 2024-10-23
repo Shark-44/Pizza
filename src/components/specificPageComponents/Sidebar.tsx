@@ -19,7 +19,7 @@ const Sidebar = ({ orderItems, setIdType }: SidebarProps) => {
             <FilterButtons setIdType={setIdType}/>   
             </div>      
         ) : (
-            <OrderSummary orderItems={orderItems} />
+            <OrderSummary />
         )}
       </div>
     );
