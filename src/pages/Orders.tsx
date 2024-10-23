@@ -15,9 +15,9 @@ const Orders = () => {
     ];
 
     return (
-        <div className="flex">
+        <div className="bg-yellow-50 h-screen">
             <Sidebar orderItems={orderItems} setIdType={setIdType} />
-            <div className="bg-yellow-50 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-20 ml-64">
+            <div className="bg-yellow-50 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-20 ml-64">
                 {error ? (
                     <p>{error}</p> 
                 ) : (
