@@ -1,4 +1,4 @@
-// types.ts
+
 export interface Product {
     id: number;
     nomproduit: string;
@@ -19,3 +19,10 @@ export interface Button {
     onClick: () => void;     
     className?: string;     
 }
+
+export interface OrderItem {
+    id: number;
+    name: string;
+    quantity: number;
+  }
+

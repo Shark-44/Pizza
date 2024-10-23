@@ -4,7 +4,11 @@ import { Type } from '../../types/types';
 
 import { useEffect, useState } from "react";
 
-function FilterButtons () {
+interface FilterButtonsProps {
+    setIdType: (id: number) => void;
+}
+
+function FilterButtons ({ setIdType }: FilterButtonsProps) {
     const [types, setTypes] = useState<Type[]>([]);
 
     useEffect(() => {
@@ -21,8 +25,7 @@ function FilterButtons () {
     }, []);
 
     const handleButtonClick = (typeId: number) => {
-        console.log(`Type sélectionné : ${typeId}`);
-        // Ajoutez votre logique de filtrage ici
+        setIdType(typeId);  
     };
 
     return (
