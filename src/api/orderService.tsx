@@ -1,12 +1,6 @@
 import axiosInstance from './axiosInstance';
+import { Order } from '../types/types';
 
-interface Order {
-    id: number;
-    numeroCommande: string;
-    prixtotalCommande?: number;  
-    timestamp: string;           
-    statusCommande: 'en cours' | 'payé';
-  }
 // Récupérer toutes les commandes
 export const fetchOrders = async (): Promise<Order[]> => {
   const response = await axiosInstance.get<Order[]>('/orders');
