@@ -14,6 +14,20 @@ export interface Type {
     nomtype: string;
 }
 
+export interface Order {
+    id: number;
+    numeroCommande: string;
+    prixtotalCommande?: number;  
+    timestamp: string;           
+    statusCommande: 'en cours' | 'payé';
+  }
+
+export interface Basket {
+    produit_id: number;
+    commande_id: number;
+    quantiteCommande: number;
+}
+  
 export interface Button {
     label: string;           
     onClick: () => void;     
