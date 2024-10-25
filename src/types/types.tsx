@@ -18,7 +18,7 @@ export interface Order {
     id: number;
     numeroCommande: string;
     prixtotalCommande?: number;  
-    timestamp: string;           
+    timestamp: Date;           
     statusCommande: 'en cours' | 'payé';
   }
 
