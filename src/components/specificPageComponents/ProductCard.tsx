@@ -1,6 +1,7 @@
 
 import { Product } from '../../types/types';
 
+
 interface ProductCardProps {
     product: Product; 
     onAddToBasket: (product: Product) => void;
@@ -19,6 +20,8 @@ function ProductCard({ product, onAddToBasket }: ProductCardProps) {
         className="w-full h-58 object-cover mb-2"
     />
     <p className="font-dancing text-2xl text-gray-700 flex-grow ml-3">{product.descriptionProduit}</p>
+    <p>{product.nouveauPrix}</p>
+
 </div>
 
 
