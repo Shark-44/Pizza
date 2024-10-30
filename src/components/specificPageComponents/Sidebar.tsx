@@ -1,7 +1,9 @@
 import FilterButtons from "./FilterButtons";
+import Button from "../../components/aggregate/button";
 import { Basket } from "../../types/types";
 import { useProductDetails } from "../../hooks/useProductDetails";
 import { useShowFilters } from "../../hooks/useShowFilters";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   orderItems: Basket[];
@@ -11,6 +13,11 @@ interface SidebarProps {
 const Sidebar = ({ orderItems, setIdType }: SidebarProps) => {
   const { showFilters, setShowFilters } = useShowFilters(orderItems);
   const { getProductDisplay } = useProductDetails(orderItems);
+  const navigate = useNavigate();
+
+  const handleFinishOrder = () => {
+    navigate("/Order-validation", { state: { orderItems } });
+  };
 
   return (
     <div className="w-64 fixed top-20 left-0 h-[calc(100vh-5rem)] bg-gray-950 p-4 z-10">
@@ -34,12 +41,18 @@ const Sidebar = ({ orderItems, setIdType }: SidebarProps) => {
               </div>
             ))}
           </div>
-          <button
+
+          <Button
+          label= "Retour liste produits"
             onClick={() => setShowFilters(true)}
             className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-400"
-          >
-            Retour liste produits
-          </button>
+          />
+
+          <Button
+            label= "Terminer commande"
+            onClick={handleFinishOrder}
+            className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-400"
+          />
         </div>
       )}
     </div>
