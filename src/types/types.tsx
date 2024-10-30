@@ -6,7 +6,8 @@ export interface Product {
     photoProduit?: string;        
     carte?: boolean;              
     type_id?: number;             
-    prix_id?: number;             
+    prix_id?: number;
+    nouveauPrix: number;        
 }
 
 export interface Type {
@@ -18,7 +19,7 @@ export interface Order {
     id: number;
     numeroCommande: string;
     prixtotalCommande?: number;  
-    timestamp: string;           
+    timestamp: Date;           
     statusCommande: 'en cours' | 'payé';
   }
 

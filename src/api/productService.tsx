@@ -10,9 +10,14 @@ export const fetchProducts = async (): Promise<Product[]> => {
   return response.data;
 };
 
+export const fetchProductsAndPrice = async (): Promise<Product[]> => {
+  const response = await axiosInstance.get<Product[]>('/productswithprice');
+  console.log(response.data);
+  return response.data;
+};
 // Récupérer tous les produits par type
 export const fetchProductsByType = async (typeId: number): Promise<Product[]> => {
-  const response = await axiosInstance.get<Product[]>(`/products/bytype?id=${typeId}`);
+  const response = await axiosInstance.get<Product[]>(`/productsbytype?id=${typeId}`);
   return response.data;
 };
 

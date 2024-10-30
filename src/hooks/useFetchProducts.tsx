@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchProducts, fetchProductsByType } from "../api/productService";
+import { fetchProductsAndPrice, fetchProductsByType } from "../api/productService";
 import { Product } from '../types/types';
 
 const useFetchProducts = (idType?: number) => {
@@ -11,7 +11,7 @@ const useFetchProducts = (idType?: number) => {
             try {
                 const res = idType !== undefined 
                     ? await fetchProductsByType(idType)
-                    : await fetchProducts();
+                    : await fetchProductsAndPrice();
                 setProducts(res);
             } catch (error) {
                 console.error("Erreur lors de la récupération des produits", error);
