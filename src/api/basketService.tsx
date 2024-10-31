@@ -24,3 +24,25 @@ export const addItem = async (
     throw new Error('Impossible de créer la commande');
   }
 };
+export const upQuantite = async (
+  produit_id: number,
+  commande_id: number,
+  quantiteCommande: number,
+  
+
+): Promise<Basket> => {
+  const orderData = {
+    produit_id,
+    commande_id,
+    quantiteCommande,
+
+  };
+
+  try {
+    const response = await axiosInstance.put<Basket>('/basket', orderData);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la mise a jour quantite:', error);
+    throw new Error('Impossible de mettre a jour quantiteCommande');
+  }
+};

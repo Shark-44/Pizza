@@ -3,7 +3,7 @@ import ProductCard from "../components/specificPageComponents/ProductCard";
 import { Product, Basket } from '../types/types';
 import Sidebar from "../components/specificPageComponents/Sidebar";
 import useFetchProducts from "../hooks/useFetchProducts";
-import { addItem } from '../api/basketService';
+import { addItem, upQuantite } from '../api/basketService';
 
 const Orders = () => {
     const [idType, setIdType] = useState<number | undefined>(undefined); 
@@ -16,6 +16,14 @@ const Orders = () => {
             const existingItem = prevBasket.find(item => item.produit_id === product.id);
 
             if (existingItem) {
+                const quantiteCommande = existingItem.quantiteCommande + 1;
+                upQuantite(product.id, 2, quantiteCommande)
+                .then((updatedBasket) => {
+                    console.log("Quantité mise à jour :", updatedBasket);
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de la mise à jour de la quantité :", error);
+                });
                 return prevBasket.map(item =>
                     item.produit_id === product.id
                         ? { ...item, quantiteCommande: item.quantiteCommande + 1 }
