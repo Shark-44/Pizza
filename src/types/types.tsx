@@ -28,6 +28,14 @@ export interface Basket {
     commande_id: number;
     quantiteCommande: number;
 }
+export type AddItemParams = {
+    orderId: number;
+    productId: number;
+  };
+  
+  export type UpdateQuantityParams = AddItemParams & {
+    quantity: number;
+  };
   
 export interface Button {
     label: string;           
