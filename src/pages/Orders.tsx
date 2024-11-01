@@ -4,20 +4,23 @@ import { Product, Basket } from '../types/types';
 import Sidebar from "../components/specificPageComponents/Sidebar";
 import useFetchProducts from "../hooks/useFetchProducts";
 import { addItem, upQuantite } from '../api/basketService';
+import { useLocation } from "react-router-dom";
 
 const Orders = () => {
     const [idType, setIdType] = useState<number | undefined>(undefined); 
     const [basket, setBasket] = useState<Basket[]>([]);
     const { products, error } = useFetchProducts(idType);
-    console.log("Mon panier :", basket);
+    const location = useLocation();
+    const { id } = location.state || {};
+   
 
-    const handleAddToBasket = async (product: Product) => {  // Change to async
+    const handleAddToBasket = async (product: Product) => { 
         setBasket((prevBasket) => {
             const existingItem = prevBasket.find(item => item.produit_id === product.id);
 
             if (existingItem) {
                 const quantiteCommande = existingItem.quantiteCommande + 1;
-                upQuantite(product.id, 2, quantiteCommande)
+                upQuantite(product.id, id, quantiteCommande)
                 .then((updatedBasket) => {
                     console.log("Quantité mise à jour :", updatedBasket);
                 })
@@ -31,7 +34,7 @@ const Orders = () => {
                 );
             } else {
                 
-                addItem(product.id, 2)  
+                addItem(product.id, id)  
                     .then((data) => {
                         
                         console.log("Produit ajouté au panier :", data);
@@ -40,7 +43,7 @@ const Orders = () => {
                         console.error("Erreur lors de l'ajout au panier :", error);
                     });
                 
-                return [...prevBasket, { produit_id: product.id, commande_id: 0, quantiteCommande: 1 }];
+                return [...prevBasket, { produit_id: product.id, commande_id: id, quantiteCommande: 1 }];
             }
         });
     };

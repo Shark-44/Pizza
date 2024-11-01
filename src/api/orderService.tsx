@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-import { Order, Basket } from '../types/types';
+import { Order, Basket, FullOrder } from '../types/types';
 
 // Récupérer toutes les commandes
 export const fetchOrders = async (): Promise<Order[]> => {
@@ -7,11 +7,7 @@ export const fetchOrders = async (): Promise<Order[]> => {
   return response.data;
 };
 
-// Récupérer une commande spécifique par son ID
-export const fetchOrderById = async (id: number): Promise<Order> => {
-  const response = await axiosInstance.get<Order>(`/orders/${id}`);
-  return response.data;
-};
+
 
 // Créer une nouvelle commande
 export const createOrder = async (
@@ -56,4 +52,10 @@ export const updateOrder = async (orderId: number, products: Basket[]): Promise<
 // Supprimer une commande
 export const deleteOrder = async (id: number): Promise<void> => {
   await axiosInstance.delete(`/orders/${id}`);
+};
+// Recuperer la commande finale
+
+export const finalOrder = async (id: number): Promise<FullOrder> => {
+  const response = await axiosInstance.get<FullOrder>(`/orders/${id}`);
+  return response.data;
 };

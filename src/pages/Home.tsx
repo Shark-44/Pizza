@@ -35,7 +35,12 @@ const Home = () => {
 
     return (
         <div className="bg-yellow-50 h-screen flex justify-center items-center">
-            <Link to="/Order">
+                <Link 
+                to={{
+                    pathname: "/Order"
+                }} 
+                state={{ id: 2 }}  
+                >
                 <Button 
                     label="Entrer"
                     onClick={handleButtonClick} 
