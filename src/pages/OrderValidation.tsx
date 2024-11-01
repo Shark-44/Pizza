@@ -1,22 +1,68 @@
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useFetchFullOrders from "../hooks/useFetchFullOrders";
 import { OrderProduct } from "../types/types";
 import { Plus, Minus } from "lucide-react";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const OrderValidation = () => {
     const location = useLocation();
     const { id } = location.state || {};
-    const { fullOrder, error } = useFetchFullOrders(2); // Remettre id a la place de 2. Ici pour des tests 
+    const { fullOrder, error } = useFetchFullOrders(2);
     const API_URL = import.meta.env.VITE_BACKEND_URL;
-    const [quantities, setQuantities] = useState<{[key: number]: number}>({});
+    const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+    const [confirmDeletion, setConfirmDeletion] = useState<{ [key: number]: boolean }>({});
+    const [showTooltip, setShowTooltip] = useState<{ [key: number]: boolean }>({});
+    const [activeProducts, setActiveProducts] = useState<OrderProduct[]>([]);
+
+    useEffect(() => {
+        if (fullOrder) {
+            const initialQuantities: { [key: number]: number } = {};
+            fullOrder.produits.forEach((product: OrderProduct) => {
+                initialQuantities[product.produit_id] = product.quantiteCommande;
+            });
+            setQuantities(initialQuantities);
+            setActiveProducts(fullOrder.produits);
+        }
+    }, [fullOrder]);
 
     const handleQuantityChange = (productId: number, change: number) => {
-        setQuantities(prev => {
+        setQuantities((prev) => {
             const currentQty = prev[productId] || 0;
-            const newQty = Math.max(0, currentQty + change);
+            const newQty = currentQty + change;
+
+            if (newQty <= 0) {
+                setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: true }));
+                setShowTooltip((prevShow) => ({ ...prevShow, [productId]: true }));
+                return prev;
+            }
+
+            setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
+            setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
             return { ...prev, [productId]: newQty };
         });
+    };
+
+    const confirmRemoveProduct = (productId: number) => {
+        // Supprimer le produit de activeProducts
+        setActiveProducts(currentProducts => 
+            currentProducts.filter(product => product.produit_id !== productId)
+        );
+        
+        // Mettre à jour les quantités
+        setQuantities((prev) => {
+            const newQuantities = { ...prev };
+            delete newQuantities[productId];
+            return newQuantities;
+        });
+        
+        setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
+        setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
+    };
+
+    const cancelDeletion = (productId: number) => {
+        setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
+        setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
     };
 
     if (error) {
@@ -28,10 +74,9 @@ const OrderValidation = () => {
     }
 
     const calculateTotal = () => {
-        if (!fullOrder?.produits) return 0;
-        return fullOrder.produits.reduce((total, product) => {
-            const qty = quantities[product.produit_id] || product.quantiteCommande;
-            return total + (product.prixUnitaire * qty);
+        return activeProducts.reduce((total, product) => {
+            const qty = quantities[product.produit_id] || 0;
+            return total + product.prixUnitaire * qty;
         }, 0);
     };
 
@@ -55,10 +100,10 @@ const OrderValidation = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {fullOrder?.produits.map((product: OrderProduct) => {
-                                const qty = quantities[product.produit_id] || product.quantiteCommande;
+                            {activeProducts.map((product: OrderProduct) => {
+                                const qty = quantities[product.produit_id] || 0;
                                 const total = product.prixUnitaire * qty;
-                                
+
                                 return (
                                     <tr key={product.produit_id} className="border-t">
                                         <td className="px-6 py-4">
@@ -76,19 +121,49 @@ const OrderValidation = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center justify-center space-x-2">
-                                                <button
-                                                    onClick={() => handleQuantityChange(product.produit_id, -1)}
-                                                    className="p-1 rounded hover:bg-gray-100"
-                                                >
-                                                    <Minus className="w-4 h-4" />
-                                                </button>
-                                                <span className="w-12 text-center">{qty}</span>
-                                                <button
-                                                    onClick={() => handleQuantityChange(product.produit_id, 1)}
-                                                    className="p-1 rounded hover:bg-gray-100"
-                                                >
-                                                    <Plus className="w-4 h-4" />
-                                                </button>
+                                                {confirmDeletion[product.produit_id] ? (
+                                                    <div className="bg-gray-200 p-2 rounded flex items-center space-x-2">
+                                                        <span className="text-sm">Confirmer la suppression ?</span>
+                                                        <button
+                                                            onClick={() => confirmRemoveProduct(product.produit_id)}
+                                                            className="text-red-500 hover:underline mx-1 text-sm"
+                                                        >
+                                                            Oui
+                                                        </button>
+                                                        <button
+                                                            onClick={() => cancelDeletion(product.produit_id)}
+                                                            className="text-blue-500 hover:underline mx-1 text-sm"
+                                                        >
+                                                            Non
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <button
+                                                            id={`decrease-${product.produit_id}`}
+                                                            onClick={() => handleQuantityChange(product.produit_id, -1)}
+                                                            className="p-1 rounded hover:bg-gray-100"
+                                                            data-tooltip-id={`tooltip-${product.produit_id}`}
+                                                        >
+                                                            <Minus className="w-4 h-4" />
+                                                        </button>
+                                                        {qty === 1 && (
+                                                            <ReactTooltip
+                                                                id={`tooltip-${product.produit_id}`}
+                                                                place="top"
+                                                                content="Attention, cette action supprimera le produit"
+                                                                isOpen={showTooltip[product.produit_id]}
+                                                            />
+                                                        )}
+                                                        <span className="w-12 text-center">{qty}</span>
+                                                        <button
+                                                            onClick={() => handleQuantityChange(product.produit_id, 1)}
+                                                            className="p-1 rounded hover:bg-gray-100"
+                                                        >
+                                                            <Plus className="w-4 h-4" />
+                                                        </button>
+                                                    </>
+                                                )}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right font-medium">
