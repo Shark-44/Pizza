@@ -1,22 +1,19 @@
 import FilterButtons from "./FilterButtons";
 import Button from "../../components/aggregate/button";
-import { Basket } from "../../types/types";
+import { SidebarProps } from "../../types/types";
 import { useProductDetails } from "../../hooks/useProductDetails";
 import { useShowFilters } from "../../hooks/useShowFilters";
 import { useNavigate } from "react-router-dom";
 
-interface SidebarProps {
-  orderItems: Basket[];
-  setIdType: (type: number | undefined) => void;
-}
 
-const Sidebar = ({ orderItems, setIdType }: SidebarProps) => {
+
+const Sidebar = ({ orderItems, setIdType, orderId }: SidebarProps) => {
   const { showFilters, setShowFilters } = useShowFilters(orderItems);
   const { getProductDisplay } = useProductDetails(orderItems);
   const navigate = useNavigate();
 
   const handleFinishOrder = () => {
-    navigate("/Order-validation", { state: { orderItems } });
+    navigate("/Order-validation", { state: { orderId } });
   };
 
   return (

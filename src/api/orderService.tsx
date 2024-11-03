@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInstance';
-import { Order, Basket, FullOrder } from '../types/types';
+import { Order, FullOrder } from '../types/types';
+import { formatDateForDB } from '../utils/dateHelpers'; 
 
 // Récupérer toutes les commandes
 export const fetchOrders = async (): Promise<Order[]> => {
@@ -11,16 +12,15 @@ export const fetchOrders = async (): Promise<Order[]> => {
 
 // Créer une nouvelle commande
 export const createOrder = async (
-  numeroCommande: string,
-  timestamp: string
+  orderNumber: string, timestamp: Date
 
 ): Promise<Order> => {
+  const formattedTimestamp = formatDateForDB(timestamp);
   const orderData = {
-    numeroCommande,
-    timestamp,
-    statusCommande: 'en cours',
-
-  };
+    numeroCommande: orderNumber,
+    timestamp: formattedTimestamp, // Utilise la date formatée
+    statusCommande: 'en cours', // Ou ce que vous souhaitez
+};
 
   try {
     const response = await axiosInstance.post<Order>('/orders', orderData);
@@ -31,23 +31,7 @@ export const createOrder = async (
   }
 };
 
-// Mettre à jour une commande existante
-export const updateOrder = async (orderId: number, products: Basket[]): Promise<Order> => {
-  const orderData = {
-      produits: products.map(product => ({
-          produit_id: product.produit_id,
-          quantiteCommande: product.quantiteCommande || 1,
-      })),
-  };
 
-  try {
-      const response = await axiosInstance.put(`/orders/${orderId}`, orderData); // Assurez-vous que l'endpoint est correct
-      return response.data;
-  } catch (error) {
-      console.error('Erreur lors de la mise à jour de la commande:', error);
-      throw new Error('Impossible de mettre à jour la commande');
-  }
-};
 
 // Supprimer une commande
 export const deleteOrder = async (id: number): Promise<void> => {
@@ -58,4 +42,22 @@ export const deleteOrder = async (id: number): Promise<void> => {
 export const finalOrder = async (id: number): Promise<FullOrder> => {
   const response = await axiosInstance.get<FullOrder>(`/orders/${id}`);
   return response.data;
+};
+
+//finaliser commander
+
+export const finishOrder = async (orderId: number, prixtotalCommande: number): Promise<Order> => {
+  const orderData = {
+    id: orderId,
+    prixtotalCommande,
+    statusCommande: 'payé',
+  };
+
+  try {
+      const response = await axiosInstance.put(`/orders/${orderId}`, orderData); 
+      return response.data;
+  } catch (error) {
+      console.error('Erreur lors de la mise à jour de la commande:', error);
+      throw new Error('Impossible de mettre à jour la commande');
+  }
 };

@@ -4,11 +4,18 @@ import useFetchFullOrders from "../hooks/useFetchFullOrders";
 import { OrderProduct } from "../types/types";
 import { Plus, Minus } from "lucide-react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { upQuantite, deleteBasket } from '../api/basketService';
+import Button from "../components/aggregate/button";
+import { useNavigate } from "react-router-dom";
+import { finishOrder } from "../api/orderService";
 
 const OrderValidation = () => {
+    
     const location = useLocation();
-    const { id } = location.state || {};
-    const { fullOrder, error } = useFetchFullOrders(2);
+    const { orderId } = location.state || {};
+    const navigate = useNavigate();
+
+    const { fullOrder, error } = useFetchFullOrders(orderId );
     const API_URL = import.meta.env.VITE_BACKEND_URL;
     const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
     const [confirmDeletion, setConfirmDeletion] = useState<{ [key: number]: boolean }>({});
@@ -37,13 +44,25 @@ const OrderValidation = () => {
                 return prev;
             }
 
+            setActiveProducts(currentProducts => 
+                currentProducts.map(product => 
+                    product.produit_id === productId 
+                        ? { ...product, quantiteCommande: newQty } 
+                        : product
+                )
+            );
+            upQuantite(productId, orderId, newQty)
             setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
             setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
             return { ...prev, [productId]: newQty };
         });
+        
     };
 
     const confirmRemoveProduct = (productId: number) => {
+        // Supprime le produit du panier dans la base de données
+        deleteBasket(productId, orderId);
+        
         // Supprimer le produit de activeProducts
         setActiveProducts(currentProducts => 
             currentProducts.filter(product => product.produit_id !== productId)
@@ -79,7 +98,11 @@ const OrderValidation = () => {
             return total + product.prixUnitaire * qty;
         }, 0);
     };
-
+    const handlefinish = () =>{
+        const total = calculateTotal(); 
+        finishOrder(orderId, total); 
+        navigate('/');
+    }
     return (
         <div className="bg-yellow-50 min-h-screen p-8 pt-28">
             <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -151,7 +174,7 @@ const OrderValidation = () => {
                                                             <ReactTooltip
                                                                 id={`tooltip-${product.produit_id}`}
                                                                 place="top"
-                                                                content="Attention, cette action supprimera le produit"
+                                                                content="Attention, vous supprimez le produit"
                                                                 isOpen={showTooltip[product.produit_id]}
                                                             />
                                                         )}
@@ -186,6 +209,11 @@ const OrderValidation = () => {
                     </table>
                 </div>
             </div>
+            <Button        
+            label="Payer"
+            onClick={handlefinish}
+            className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            />
         </div>
     );
 };

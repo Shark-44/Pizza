@@ -24,6 +24,7 @@ export const addItem = async (
     throw new Error('Impossible de créer la commande');
   }
 };
+
 export const upQuantite = async (
   produit_id: number,
   commande_id: number,
@@ -44,5 +45,18 @@ export const upQuantite = async (
   } catch (error) {
     console.error('Erreur lors de la mise a jour quantite:', error);
     throw new Error('Impossible de mettre a jour quantiteCommande');
+  }
+};
+
+export const deleteBasket = async (produit_id: number, commande_id: number): Promise<void> => {
+  const requestData = { produit_id, commande_id };
+
+  try {
+  
+    await axiosInstance.delete('/basket', { data: requestData });
+    console.log('Ligne supprimée du panier avec succès');
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'élément du panier:', error);
+    throw new Error('Impossible de supprimer l\'élément du panier');
   }
 };

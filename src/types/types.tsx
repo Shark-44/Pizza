@@ -31,7 +31,7 @@ export interface Order {
   id: number;
   numeroCommande: string;
   prixtotalCommande: number | null;  
-  timestamp: Date;                  
+  timestamp: Date | string;                  
   statusCommande: 'en cours' | 'payé';
 }
 
@@ -39,7 +39,7 @@ export interface Order {
 export interface FullOrder {
   numeroCommande: string;
   prixtotalCommande: number | null;  
-  timestamp: string;
+  timestamp: Date | string;
   statusCommande: string;
   produits: OrderProduct[];         
 }
@@ -69,4 +69,9 @@ export interface OrderItem {
   id: number;
   name: string;
   quantity: number;
+}
+export interface SidebarProps {
+  orderItems: Basket[];
+  setIdType: (type: number | undefined) => void;
+  orderId: number; 
 }

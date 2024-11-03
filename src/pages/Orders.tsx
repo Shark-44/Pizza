@@ -11,7 +11,8 @@ const Orders = () => {
     const [basket, setBasket] = useState<Basket[]>([]);
     const { products, error } = useFetchProducts(idType);
     const location = useLocation();
-    const { id } = location.state || {};
+    const { orderId } = location.state || {};
+
    
 
     const handleAddToBasket = async (product: Product) => { 
@@ -20,7 +21,7 @@ const Orders = () => {
 
             if (existingItem) {
                 const quantiteCommande = existingItem.quantiteCommande + 1;
-                upQuantite(product.id, id, quantiteCommande)
+                upQuantite(product.id, orderId, quantiteCommande)
                 .then((updatedBasket) => {
                     console.log("Quantité mise à jour :", updatedBasket);
                 })
@@ -34,7 +35,7 @@ const Orders = () => {
                 );
             } else {
                 
-                addItem(product.id, id)  
+                addItem(product.id, orderId)  
                     .then((data) => {
                         
                         console.log("Produit ajouté au panier :", data);
@@ -43,14 +44,14 @@ const Orders = () => {
                         console.error("Erreur lors de l'ajout au panier :", error);
                     });
                 
-                return [...prevBasket, { produit_id: product.id, commande_id: id, quantiteCommande: 1 }];
+                return [...prevBasket, { produit_id: product.id, commande_id: orderId, quantiteCommande: 1 }];
             }
         });
     };
 
     return (
         <div className="bg-yellow-50 min-h-screen">
-            <Sidebar orderItems={basket} setIdType={setIdType} />
+            <Sidebar orderItems={basket} setIdType={setIdType} orderId={orderId} />
             <div className="bg-yellow-50 flex-1 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-20 ml-64">
                 {error ? (
                     <p>{error}</p>
