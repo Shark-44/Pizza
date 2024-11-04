@@ -60,9 +60,10 @@ export type UpdateQuantityParams = AddItemParams & {
 };
 
 export interface Button {
-  label: string;          
-  onClick: () => void;    
-  className?: string;     
+  label: string;
+  onClick?: () => void;
+  className?: string;
+  isDisabled?: boolean; 
 }
 
 export interface OrderItem {
@@ -75,3 +76,4 @@ export interface SidebarProps {
   setIdType: (type: number | undefined) => void;
   orderId: number; 
 }
+

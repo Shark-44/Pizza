@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useFetchFullOrders from "../hooks/useFetchFullOrders";
 import { OrderProduct } from "../types/types";
@@ -6,21 +6,20 @@ import { Plus, Minus } from "lucide-react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { upQuantite, deleteBasket } from '../api/basketService';
 import Button from "../components/aggregate/button";
-import { useNavigate } from "react-router-dom";
 import { finishOrder } from "../api/orderService";
 
 const OrderValidation = () => {
-    
     const location = useLocation();
-    const { orderId } = location.state || {};
     const navigate = useNavigate();
-
-    const { fullOrder, error } = useFetchFullOrders(orderId );
+    const { orderId } = location.state || {};
+    const { fullOrder, error } = useFetchFullOrders(orderId);
     const API_URL = import.meta.env.VITE_BACKEND_URL;
+
     const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
     const [confirmDeletion, setConfirmDeletion] = useState<{ [key: number]: boolean }>({});
     const [showTooltip, setShowTooltip] = useState<{ [key: number]: boolean }>({});
     const [activeProducts, setActiveProducts] = useState<OrderProduct[]>([]);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
         if (fullOrder) {
@@ -33,7 +32,7 @@ const OrderValidation = () => {
         }
     }, [fullOrder]);
 
-    const handleQuantityChange = (productId: number, change: number) => {
+    const handleQuantityChange = async (productId: number, change: number) => {
         setQuantities((prev) => {
             const currentQty = prev[productId] || 0;
             const newQty = currentQty + change;
@@ -51,37 +50,58 @@ const OrderValidation = () => {
                         : product
                 )
             );
-            upQuantite(productId, orderId, newQty)
+            
+            upQuantite(productId, orderId, newQty);
             setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
             setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
             return { ...prev, [productId]: newQty };
         });
-        
     };
 
-    const confirmRemoveProduct = (productId: number) => {
-        // Supprime le produit du panier dans la base de données
-        deleteBasket(productId, orderId);
-        
-        // Supprimer le produit de activeProducts
-        setActiveProducts(currentProducts => 
-            currentProducts.filter(product => product.produit_id !== productId)
-        );
-        
-        // Mettre à jour les quantités
-        setQuantities((prev) => {
-            const newQuantities = { ...prev };
-            delete newQuantities[productId];
-            return newQuantities;
-        });
-        
-        setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
-        setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
+    const confirmRemoveProduct = async (productId: number) => {
+        try {
+            await deleteBasket(productId, orderId);
+            setActiveProducts(currentProducts => 
+                currentProducts.filter(product => product.produit_id !== productId)
+            );
+            setQuantities((prev) => {
+                const newQuantities = { ...prev };
+                delete newQuantities[productId];
+                return newQuantities;
+            });
+            setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
+            setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
+        } catch (error) {
+            console.error('Erreur lors de la suppression:', error);
+        }
     };
 
-    const cancelDeletion = (productId: number) => {
-        setConfirmDeletion((prevConfirm) => ({ ...prevConfirm, [productId]: false }));
-        setShowTooltip((prevShow) => ({ ...prevShow, [productId]: false }));
+    const calculateTotal = () => {
+        return activeProducts.reduce((total, product) => {
+            const qty = quantities[product.produit_id] || 0;
+            return total + product.prixUnitaire * qty;
+        }, 0);
+    };
+
+    const handleFinish = async () => {
+        if (isProcessing) return;
+        
+        try {
+            setIsProcessing(true);
+            const total = calculateTotal();
+            const lastOrderInfo = {
+                timestamp: new Date().toISOString(),
+                lastNumber: fullOrder?.numeroCommande,
+                completed: true
+            };
+            await finishOrder(orderId, total);
+            localStorage.setItem('lastOrderInfo', JSON.stringify(lastOrderInfo));
+            navigate('/');
+        } catch (error) {
+            console.error('Erreur lors de la finalisation:', error);
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     if (error) {
@@ -92,17 +112,6 @@ const OrderValidation = () => {
         );
     }
 
-    const calculateTotal = () => {
-        return activeProducts.reduce((total, product) => {
-            const qty = quantities[product.produit_id] || 0;
-            return total + product.prixUnitaire * qty;
-        }, 0);
-    };
-    const handlefinish = () =>{
-        const total = calculateTotal(); 
-        finishOrder(orderId, total); 
-        navigate('/');
-    }
     return (
         <div className="bg-yellow-50 min-h-screen p-8 pt-28">
             <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -132,7 +141,7 @@ const OrderValidation = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center space-x-4">
                                                 <img
-                                                    src={API_URL + product.photoProduit}
+                                                    src={`${API_URL}${product.photoProduit}`}
                                                     alt={product.nomproduit}
                                                     className="w-16 h-16 object-cover rounded"
                                                 />
@@ -154,7 +163,10 @@ const OrderValidation = () => {
                                                             Oui
                                                         </button>
                                                         <button
-                                                            onClick={() => cancelDeletion(product.produit_id)}
+                                                            onClick={() => setConfirmDeletion(prev => ({
+                                                                ...prev,
+                                                                [product.produit_id]: false
+                                                            }))}
                                                             className="text-blue-500 hover:underline mx-1 text-sm"
                                                         >
                                                             Non
@@ -209,11 +221,14 @@ const OrderValidation = () => {
                     </table>
                 </div>
             </div>
-            <Button        
-            label="Payer"
-            onClick={handlefinish}
-            className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            />
+            <div className="flex justify-center mt-6">
+                <Button
+                    label={isProcessing ? "Traitement..." : "Payer"}
+                    onClick={handleFinish}
+                    isDisabled={isProcessing}
+                    className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                />
+            </div>
         </div>
     );
 };

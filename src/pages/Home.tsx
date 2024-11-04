@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Button from "../components/aggregate/button";
 import { useNavigate } from "react-router-dom";
-import { createOrder } from '../api/orderService'; 
+import { createOrder } from '../api/orderService';
 import { getCurrentDate } from "../utils/dateHelpers";
-
 import { useOrderManagement } from '../hooks/useOrderManagement';
 
 const Home = () => {
@@ -14,16 +13,13 @@ const Home = () => {
   const handleEnter = async () => {
     try {
       if (currentOrder) {
-        // Si une commande en cours existe, naviguer directement vers elle
         navigate('/Order', { state: { orderId: currentOrder.id } });
         return;
       }
-
+      
       if (newOrderNumber) {
-        // Créer une nouvelle commande
-        const timestamp = getCurrentDate(); // Appelle la fonction pour obtenir l'objet Date
+        const timestamp = getCurrentDate();
         const newOrder = await createOrder(newOrderNumber, timestamp);
-        
         navigate('/Order', { state: { orderId: newOrder.id } });
       }
     } catch (err) {
@@ -49,7 +45,7 @@ const Home = () => {
   }
 
   return (
-    <div className="bg-yellow-50 h-screen flex justify-center items-center">
+    <div className="bg-yellow-50 h-screen flex flex-col justify-center items-center">
       <Button
         label="Entrer"
         onClick={handleEnter}
@@ -61,5 +57,4 @@ const Home = () => {
     </div>
   );
 };
-
 export default Home;
