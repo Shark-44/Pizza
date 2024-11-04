@@ -1,32 +1,60 @@
+import { useState } from "react";
 import Button from "../components/aggregate/button";
-import useFetchOrders from "../hooks/useFetchOrders";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { createOrder } from '../api/orderService';
+import { getCurrentDate } from "../utils/dateHelpers";
+import { useOrderManagement } from '../hooks/useOrderManagement';
 
 const Home = () => {
-    //si multi-kiosk bouger en pages Orders
-    const { orders, error } = useFetchOrders();
+  const { currentOrder, newOrderNumber, loading, error } = useOrderManagement();
+  const navigate = useNavigate();
+  const [creationError, setCreationError] = useState<string | null>(null);
 
-
-    const handleButtonClick = () => {
-        if (orders.length > 0) {
-            console.log('Liste Commandes récupérées:', orders);
-        }
-        if (error) {
-            console.error('Erreur lors de la récupération des commandes:', error);
-        }
- 
-    };
-    return (
-        <div className="bg-yellow-50 h-screen flex justify-center items-center">
-            <Link to="/Order">
-                <Button 
-                    label="Entrer"
-                    onClick={() => handleButtonClick()}
-                    className=""
-                />
-            </Link>
-        </div>
-
-    )
+  const handleEnter = async () => {
+    try {
+      if (currentOrder) {
+        navigate('/Order', { state: { orderId: currentOrder.id } });
+        return;
+      }
+      
+      if (newOrderNumber) {
+        const timestamp = getCurrentDate();
+        const newOrder = await createOrder(newOrderNumber, timestamp);
+        navigate('/Order', { state: { orderId: newOrder.id } });
+      }
+    } catch (err) {
+      setCreationError('Erreur lors de la création/récupération de la commande');
+      console.error(err);
     }
-    export default Home;
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-yellow-50 h-screen flex justify-center items-center">
+        <p>Chargement...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-yellow-50 h-screen flex justify-center items-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-yellow-50 h-screen flex flex-col justify-center items-center">
+      <Button
+        label="Entrer"
+        onClick={handleEnter}
+        className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+      />
+      {creationError && (
+        <p className="text-red-500 mt-4">{creationError}</p>
+      )}
+    </div>
+  );
+};
+export default Home;

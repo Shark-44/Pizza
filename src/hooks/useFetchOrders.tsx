@@ -6,8 +6,8 @@ import { getCurrentDate } from '../utils/dateHelpers';
 const useFetchOrders = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [orderNumber, setOrderNumber] = useState<string | null>(null); // Numéro de commande
-
+    const [orderNumber, setOrderNumber] = useState<string | null>(null); 
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -73,6 +73,7 @@ const useFetchOrders = () => {
         fetchData();
     }, []);
 
+   
     return { orders, error, orderNumber };
 };
 
