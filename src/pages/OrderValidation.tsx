@@ -7,8 +7,10 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 import { upQuantite, deleteBasket } from '../api/basketService';
 import Button from "../components/aggregate/button";
 import { finishOrder } from "../api/orderService";
+import { useTranslation } from 'react-i18next';
 
 const OrderValidation = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const { orderId } = location.state || {};
@@ -117,7 +119,7 @@ const OrderValidation = () => {
             <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
                 <div className="border-b pb-4 mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800">
-                        Commande N° {fullOrder?.numeroCommande}
+                    {t('pageov.title')} : {fullOrder?.numeroCommande}
                     </h2>
                 </div>
 
@@ -125,10 +127,10 @@ const OrderValidation = () => {
                     <table className="w-full">
                         <thead>
                             <tr className="bg-gray-50">
-                                <th className="px-6 py-3 text-left">Produit</th>
-                                <th className="px-6 py-3 text-right">Prix unitaire</th>
-                                <th className="px-6 py-3 text-center">Quantité</th>
-                                <th className="px-6 py-3 text-right">Total</th>
+                                <th className="px-6 py-3 text-left">{t('pageov.product')}</th>
+                                <th className="px-6 py-3 text-right">{t('pageov.price-u')}</th>
+                                <th className="px-6 py-3 text-center">{t('pageov.quantity')}</th>
+                                <th className="px-6 py-3 text-right">{t('pageov.total')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -155,12 +157,12 @@ const OrderValidation = () => {
                                             <div className="flex items-center justify-center space-x-2">
                                                 {confirmDeletion[product.produit_id] ? (
                                                     <div className="bg-gray-200 p-2 rounded flex items-center space-x-2">
-                                                        <span className="text-sm">Confirmer la suppression ?</span>
+                                                        <span className="text-sm">{t('pageov.choice')}</span>
                                                         <button
                                                             onClick={() => confirmRemoveProduct(product.produit_id)}
                                                             className="text-red-500 hover:underline mx-1 text-sm"
                                                         >
-                                                            Oui
+                                                            {t('pageov.yes')}
                                                         </button>
                                                         <button
                                                             onClick={() => setConfirmDeletion(prev => ({
@@ -169,7 +171,7 @@ const OrderValidation = () => {
                                                             }))}
                                                             className="text-blue-500 hover:underline mx-1 text-sm"
                                                         >
-                                                            Non
+                                                            {t('pageov.no')}
                                                         </button>
                                                     </div>
                                                 ) : (
@@ -186,7 +188,7 @@ const OrderValidation = () => {
                                                             <ReactTooltip
                                                                 id={`tooltip-${product.produit_id}`}
                                                                 place="top"
-                                                                content="Attention, vous supprimez le produit"
+                                                                content={t('pageov.content')}
                                                                 isOpen={showTooltip[product.produit_id]}
                                                             />
                                                         )}
@@ -211,7 +213,7 @@ const OrderValidation = () => {
                         <tfoot>
                             <tr className="border-t">
                                 <td colSpan={3} className="px-6 py-4 text-right font-semibold">
-                                    Total
+                                {t('pageov.total')}
                                 </td>
                                 <td className="px-6 py-4 text-right font-semibold">
                                     {calculateTotal().toFixed(2)} €
@@ -223,7 +225,7 @@ const OrderValidation = () => {
             </div>
             <div className="flex justify-center mt-6">
                 <Button
-                    label={isProcessing ? "Traitement..." : "Payer"}
+                    label={isProcessing ? t('button.label4') : t('button.label5')}
                     onClick={handleFinish}
                     isDisabled={isProcessing}
                     className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"

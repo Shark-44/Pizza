@@ -4,10 +4,12 @@ import { SidebarProps } from "../../types/types";
 import { useProductDetails } from "../../hooks/useProductDetails";
 import { useShowFilters } from "../../hooks/useShowFilters";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 
 
 const Sidebar = ({ orderItems, setIdType, orderId }: SidebarProps) => {
+  const { t } = useTranslation();
   const { showFilters, setShowFilters } = useShowFilters(orderItems);
   const { getProductDisplay } = useProductDetails(orderItems);
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const Sidebar = ({ orderItems, setIdType, orderId }: SidebarProps) => {
         </div>
       ) : (
         <div className="flex flex-col gap-y-4 my-20">
-          <h2 className="text-white text-lg font-semibold mb-4">Votre commande</h2>
+          <h2 className="text-white text-lg font-semibold mb-4">{t('sidebar.title')}</h2>
           <div className="bg-gray-800 p-2 rounded-md overflow-y-auto max-h-[60vh]">
             {orderItems.map(item => (
               <div
@@ -40,13 +42,13 @@ const Sidebar = ({ orderItems, setIdType, orderId }: SidebarProps) => {
           </div>
 
           <Button
-          label= "Retour liste produits"
+          label= {t('button.label1')}
             onClick={() => setShowFilters(true)}
             className="mt-4 px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-400"
           />
 
           <Button
-            label= "Terminer commande"
+            label= {t('button.label2')}
             onClick={handleFinishOrder}
             className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-400"
           />

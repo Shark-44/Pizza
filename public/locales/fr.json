@@ -1,0 +1,27 @@
+{
+  "pageov": {
+    "title":"Commande N°",
+    "product":"Produit",
+    "price-u":"Prix unitaire",
+    "quantity":"Quantité",
+    "total":"Total",
+    "choice":"Confirmer la suppression ?",
+    "yes":"oui",
+    "no":"Non",
+    "content":"Attention, vous supprimez le produit"
+  },
+  
+  "banner": {
+    "title": "Chez Pizza Sorrizo, n'oublie pas ta carte de fidélité"
+  },
+  "button": {
+    "label1": "Retour liste produits",
+    "label2": "Terminer commande",
+    "label3": "Entré",
+    "label4": "Traitement ...",
+    "label5": "Payer"
+  },
+  "sidebar": {
+    "title": "Votre commande"
+  }
+}

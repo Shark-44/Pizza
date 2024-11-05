@@ -6,8 +6,10 @@ import { getCurrentDate } from "../utils/dateHelpers";
 import { useOrderManagement } from '../hooks/useOrderManagement';
 import LanguageSelector from "../components/specificPageComponents/LanguageSelector";
 import TonyImage from '../assets/Images/Tony.webp';
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
+  const { t } = useTranslation();
   const { currentOrder, newOrderNumber, loading, error } = useOrderManagement();
   const navigate = useNavigate();
   const [creationError, setCreationError] = useState<string | null>(null);
@@ -56,7 +58,7 @@ const Home = () => {
       />
       <div className="mb-4">
         <Button
-          label="Entrer"
+          label={t('button.label3')}
           onClick={handleEnter}
           className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         />
