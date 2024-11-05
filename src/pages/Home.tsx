@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { createOrder } from '../api/orderService';
 import { getCurrentDate } from "../utils/dateHelpers";
 import { useOrderManagement } from '../hooks/useOrderManagement';
+import LanguageSelector from "../components/specificPageComponents/LanguageSelector";
+import TonyImage from '../assets/Images/Tony.webp';
 
 const Home = () => {
   const { currentOrder, newOrderNumber, loading, error } = useOrderManagement();
@@ -46,14 +48,23 @@ const Home = () => {
 
   return (
     <div className="bg-yellow-50 h-screen flex flex-col justify-center items-center">
-      <Button
-        label="Entrer"
-        onClick={handleEnter}
-        className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+      <img 
+        src={TonyImage} 
+        alt="Tony" 
+        className="h-96 w-96 p-5 mb-5"
+        style={{ borderRadius: '50px' }} 
       />
+      <div className="mb-4">
+        <Button
+          label="Entrer"
+          onClick={handleEnter}
+          className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        />
+      </div>
       {creationError && (
         <p className="text-red-500 mt-4">{creationError}</p>
       )}
+      <LanguageSelector />
     </div>
   );
 };

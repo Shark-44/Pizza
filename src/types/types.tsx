@@ -63,7 +63,12 @@ export interface Button {
   label: string;
   onClick?: () => void;
   className?: string;
-  isDisabled?: boolean; 
+  isDisabled?: boolean;
+}
+export interface BtnFlag {
+  icon: string; 
+  lang: string; 
+  onClick: (lang: string) => void
 }
 
 export interface OrderItem {
