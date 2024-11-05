@@ -1,37 +1,56 @@
 import axiosInstance from './axiosInstance';
 import { Product } from '../types/types';
+import { useTranslation } from 'react-i18next';
 
 
 
   
 // Récupérer tous les produits
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await axiosInstance.get<Product[]>('/products');
-  return response.data;
+  const { i18n } = useTranslation();
+  try {
+    const response = await axiosInstance.get<Product[]>(`/products?lang=${i18n.language}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des produits:', error);
+    throw new Error('Impossible de récupérer les produits');
+  }
 };
 
 export const fetchProductsAndPrice = async (): Promise<Product[]> => {
-  const response = await axiosInstance.get<Product[]>('/productswithprice');
-  console.log(response.data);
-  return response.data;
+  const { i18n } = useTranslation();
+  try {
+    const response = await axiosInstance.get<Product[]>(`/productswithprice?lang=${i18n.language}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des produits:', error);
+    throw new Error('Impossible de récupérer les produits');
+  }
 };
 // Récupérer tous les produits par type
 export const fetchProductsByType = async (typeId: number): Promise<Product[]> => {
-  const response = await axiosInstance.get<Product[]>(`/productsbytype?id=${typeId}`);
-  return response.data;
+  const { i18n } = useTranslation();
+  try {
+    const response = await axiosInstance.get<Product[]>(`/productsbytype?id=${typeId}?lang=${i18n.language}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des produits:', error);
+    throw new Error('Impossible de récupérer les produits');
+  }
 };
-
-
-
-
-
 
 // Récupérer un produit spécifique par son ID
 export const fetchProductById = async (id: number): Promise<Product> => {
-  const response = await axiosInstance.get<Product>(`/products/${id}`);
-  return response.data;
+  const { i18n } = useTranslation();
+  try {
+    const response = await axiosInstance.get<Product>(`/products/${id}&lang=${i18n.language}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération du produit:', error);
+    throw new Error('Impossible de récupérer le produit');
+  }
 };
-
+// avoir dans la partie admin
 // Créer un nouveau produit
 export const createProduct = async (productData: Omit<Product, 'id'>): Promise<Product> => {
   const response = await axiosInstance.post<Product>('/products', productData);

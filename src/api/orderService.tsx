@@ -1,11 +1,19 @@
 import axiosInstance from './axiosInstance';
 import { Order, FullOrder } from '../types/types';
 import { formatDateForDB } from '../utils/dateHelpers'; 
+import { useTranslation } from 'react-i18next';
 
 // Récupérer toutes les commandes
 export const fetchOrders = async (): Promise<Order[]> => {
-  const response = await axiosInstance.get<Order[]>('/orders');
-  return response.data;
+  const { i18n } = useTranslation();
+  
+  try {
+    const response = await axiosInstance.get<Order[]>(`/orders?lang=${i18n.language}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des commandes:', error);
+    throw new Error('Impossible de récupérer les commandes');
+  }
 };
 
 
@@ -18,8 +26,8 @@ export const createOrder = async (
   const formattedTimestamp = formatDateForDB(timestamp);
   const orderData = {
     numeroCommande: orderNumber,
-    timestamp: formattedTimestamp, // Utilise la date formatée
-    statusCommande: 'en cours', // Ou ce que vous souhaitez
+    timestamp: formattedTimestamp, 
+    statusCommande: 'en cours', 
 };
 
   try {
@@ -35,13 +43,27 @@ export const createOrder = async (
 
 // Supprimer une commande
 export const deleteOrder = async (id: number): Promise<void> => {
-  await axiosInstance.delete(`/orders/${id}`);
+  try {
+    await axiosInstance.delete(`/orders/${id}`);
+    
+  } catch (error) {
+    console.error('Erreur lors de la supression de la commande:', error);
+    throw new Error('Impossible de de supprimer une commande');
+  }
+ 
 };
 // Recuperer la commande finale
 
 export const finalOrder = async (id: number): Promise<FullOrder> => {
-  const response = await axiosInstance.get<FullOrder>(`/orders/${id}`);
-  return response.data;
+  const { i18n } = useTranslation();
+  try {
+    const response = await axiosInstance.get<FullOrder>(`/orders/${id}?lang=${i18n.language}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la récupération des commandes (ID: ${id}):`, error);
+    throw new Error('Impossible de récupérer les commandes');
+  }
+  
 };
 
 //finaliser commander
