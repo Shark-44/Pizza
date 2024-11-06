@@ -1,14 +1,14 @@
 import axiosInstance from './axiosInstance';
 import { Order, FullOrder } from '../types/types';
 import { formatDateForDB } from '../utils/dateHelpers'; 
-import { useTranslation } from 'react-i18next';
+
+
 
 // Récupérer toutes les commandes
-export const fetchOrders = async (): Promise<Order[]> => {
-  const { i18n } = useTranslation();
-  
+export const fetchOrders = async (lang: string): Promise<Order[]> => {
+
   try {
-    const response = await axiosInstance.get<Order[]>(`/orders?lang=${i18n.language}`);
+    const response = await axiosInstance.get<Order[]>(`/orders?lang=${lang}`);
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des commandes:', error);
@@ -54,10 +54,10 @@ export const deleteOrder = async (id: number): Promise<void> => {
 };
 // Recuperer la commande finale
 
-export const finalOrder = async (id: number): Promise<FullOrder> => {
-  const { i18n } = useTranslation();
+export const finalOrder = async (id: number, lang: string): Promise<FullOrder> => {
+
   try {
-    const response = await axiosInstance.get<FullOrder>(`/orders/${id}?lang=${i18n.language}`);
+    const response = await axiosInstance.get<FullOrder>(`/orders/${id}?lang=${lang}`);
     return response.data;
   } catch (error) {
     console.error(`Erreur lors de la récupération des commandes (ID: ${id}):`, error);

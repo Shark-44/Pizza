@@ -1,15 +1,11 @@
 import axiosInstance from './axiosInstance';
 import { Product } from '../types/types';
-import { useTranslation } from 'react-i18next';
 
-
-
-  
 // Récupérer tous les produits
-export const fetchProducts = async (): Promise<Product[]> => {
-  const { i18n } = useTranslation();
+export const fetchProducts = async (lang: string): Promise<Product[]> => {
+  
   try {
-    const response = await axiosInstance.get<Product[]>(`/products?lang=${i18n.language}`);
+    const response = await axiosInstance.get<Product[]>(`/products?lang=${lang}`);
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des produits:', error);
@@ -17,10 +13,10 @@ export const fetchProducts = async (): Promise<Product[]> => {
   }
 };
 
-export const fetchProductsAndPrice = async (): Promise<Product[]> => {
-  const { i18n } = useTranslation();
+export const fetchProductsAndPrice = async (lang: string): Promise<Product[]> => {
+  
   try {
-    const response = await axiosInstance.get<Product[]>(`/productswithprice?lang=${i18n.language}`);
+    const response = await axiosInstance.get<Product[]>(`/productswithprice?lang=${lang}`);
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des produits:', error);
@@ -28,10 +24,10 @@ export const fetchProductsAndPrice = async (): Promise<Product[]> => {
   }
 };
 // Récupérer tous les produits par type
-export const fetchProductsByType = async (typeId: number): Promise<Product[]> => {
-  const { i18n } = useTranslation();
+export const fetchProductsByType = async (typeId: number, lang: string): Promise<Product[]> => {
+ 
   try {
-    const response = await axiosInstance.get<Product[]>(`/productsbytype?id=${typeId}?lang=${i18n.language}`);
+    const response = await axiosInstance.get<Product[]>(`/productsbytype?id=${typeId}&lang=${lang}`);
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des produits:', error);
@@ -40,10 +36,10 @@ export const fetchProductsByType = async (typeId: number): Promise<Product[]> =>
 };
 
 // Récupérer un produit spécifique par son ID
-export const fetchProductById = async (id: number): Promise<Product> => {
-  const { i18n } = useTranslation();
+export const fetchProductById = async (id: number, lang: string): Promise<Product> => {
+  
   try {
-    const response = await axiosInstance.get<Product>(`/products/${id}&lang=${i18n.language}`);
+    const response = await axiosInstance.get<Product>(`/products/${id}?lang=${lang}`);
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la récupération du produit:', error);

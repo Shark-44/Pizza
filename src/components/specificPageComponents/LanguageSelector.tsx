@@ -1,12 +1,15 @@
+
 import frIcon from "../../assets/images/fr.svg"; 
 import itIcon from "../../assets/images/it.svg"; 
 import gbIcon from "../../assets/images/gb.svg"; 
 import BtnFlag from '../aggregate/BtnFlag'; 
-import i18next from 'i18next';
+import useLanguage from '../../hooks/useLanguage'; 
 
 const LanguageSelector = () => {
-  const handleLanguageChange = (lang: string | undefined) => {
-    i18next.changeLanguage(lang);
+  const { changeLanguage } = useLanguage();
+
+  const handleLanguageChange = (lang: string) => {
+    changeLanguage(lang);
     console.log(`Langue changée à: ${lang}`);
   };
 

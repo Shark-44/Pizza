@@ -1,6 +1,7 @@
 import Button from "../aggregate/button";
 import { fetchTypes } from "../../api/typeService";
 import { Type } from '../../types/types';
+import  useLanguage  from '../../hooks/useLanguage'
 
 import { useEffect, useState } from "react";
 
@@ -9,12 +10,13 @@ interface FilterButtonsProps {
 }
 
 function FilterButtons ({ setIdType }: FilterButtonsProps) {
+    const { language } = useLanguage();
     const [types, setTypes] = useState<Type[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetchTypes();          
+                const res = await fetchTypes(language);          
                 setTypes(res);
             } catch (error) {
                 console.error("Erreur lors de la récupération des types", error);

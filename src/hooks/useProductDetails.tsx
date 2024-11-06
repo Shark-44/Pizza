@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { fetchProductById } from "../api/productService";
 import { Basket, Product } from "../types/types";
+import  useLanguage  from '../hooks/useLanguage'
 
 // Hook personnalisé pour gérer les détails des produits
 export const useProductDetails = (orderItems: Basket[]) => {
+  const { language } = useLanguage();
   const [productDetails, setProductDetails] = useState<Map<number, Product | { nomproduit: string }>>(
     new Map()
   );
@@ -26,7 +28,7 @@ export const useProductDetails = (orderItems: Basket[]) => {
     });
 
     try {
-      const productData = await Promise.all(productsToLoad.map(id => fetchProductById(id)));
+      const productData = await Promise.all(productsToLoad.map(id => fetchProductById(id, language)));
 
       setProductDetails(prev => {
         const newDetails = new Map(prev);
