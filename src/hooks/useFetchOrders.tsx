@@ -2,21 +2,23 @@ import { useState, useEffect } from 'react';
 import { fetchOrders } from "../api/orderService";
 import { Order } from '../types/types';
 import { getCurrentDate } from '../utils/dateHelpers';
+import  useLanguage  from '../hooks/useLanguage'
 
 const useFetchOrders = () => {
+    const { language } = useLanguage();
     const [orders, setOrders] = useState<Order[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [orderNumber, setOrderNumber] = useState<string | null>(null); 
-    
+    const [orderNumber, setOrderNumber] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchOrders(); 
+                const data = await fetchOrders(language);
                 setOrders(data);
 
                 // Vérifier s'il y a une commande "en cours"
                 const ongoingOrder = data.find(order => order.statusCommande === 'en cours');
-                
+
                 if (ongoingOrder) {
                     // Si une commande est "en cours", garder son numéro de commande
                     setOrderNumber(ongoingOrder.numeroCommande);
@@ -24,9 +26,8 @@ const useFetchOrders = () => {
                     // Générer un nouveau numéro de commande si aucune commande "en cours"
                     generateOrderNumber(data);
                 }
-
             } catch (error: any) {
-                setError(error.message);  
+                setError(error.message);
             }
         };
 
@@ -60,7 +61,7 @@ const useFetchOrders = () => {
         const incrementOrderNumber = (lastOrderNumber: string): string => {
             const letterPart = lastOrderNumber.charAt(0); // Première lettre
             const numberPart = parseInt(lastOrderNumber.slice(1), 10); // Partie numérique
-            
+
             // Incrémenter le numéro et gérer le changement de lettre si besoin
             if (numberPart < 99) {
                 return `${letterPart}${numberPart + 1}`;
@@ -71,9 +72,8 @@ const useFetchOrders = () => {
         };
 
         fetchData();
-    }, []);
+    }, [language]);
 
-   
     return { orders, error, orderNumber };
 };
 

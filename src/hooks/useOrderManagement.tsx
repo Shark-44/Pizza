@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { fetchOrders } from '../api/orderService';
 import { Order } from '../types/types';
-
+import  useLanguage  from '../hooks/useLanguage'
 
 export const useOrderManagement = () => {
+  const { language } = useLanguage();
   const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
   const [newOrderNumber, setNewOrderNumber] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ export const useOrderManagement = () => {
     const initialize = async () => {
       try {
         setLoading(true);
-        const orders = await fetchOrders();
+        const orders = await fetchOrders(language);
         
         // 1. D'abord on cherche si une commande est en cours
         const activeOrder = orders.find(order => order.statusCommande === 'en cours');

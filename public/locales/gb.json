@@ -1,0 +1,27 @@
+{
+  "pageov": {
+    "title": "Order No.",
+    "product": "Product",
+    "price-u": "Unit Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "choice": "Confirm deletion?",
+    "yes": "Yes",
+    "no": "No",
+    "content": "Warning, you are deleting the product"
+  },
+  
+  "banner": {
+    "title": "At Pizza Sorrizo, don't forget your loyalty card"
+  },
+  "button": {
+    "label1": "Back to product list",
+    "label2": "Complete order",
+    "label3": "Enter",
+    "label4": "Processing ...",
+    "label5": "Pay"
+  },
+  "sidebar": {
+    "title": "Your order"
+  }
+}
