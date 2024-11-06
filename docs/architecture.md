@@ -28,7 +28,7 @@ src
 - **components**  
   Tous les composants réutilisables sont ici. Ils peuvent être des éléments UI simples ou complexes, réutilisables dans différentes pages du projet. Par exemple, des boutons, des formulaires, ou des éléments d'affichage.
 
-  Exemple de fichier : `Sidebar.tsx` – Un composant d'affichage de la barre latérale.
+  Exemple de fichier : `Sidebar.tsx` –  Le composant de la barre latérale de navigation.
 
 - **fonts**  
   Ce dossier contient les polices de caractères utilisées dans le projet. Elles sont placées ici pour centraliser la gestion des ressources de typographie.
