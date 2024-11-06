@@ -1,0 +1,1 @@
+https://github.com/Shark-44/Pizza/tree/feature/test J'ai voulu decouvrir les tests unitaires avec Jest et demandant a chatgpt sans succes. Je dois appronfondir le sujet.
