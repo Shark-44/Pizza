@@ -94,6 +94,9 @@ Le projet supporte plusieurs langues grâce à l'internationalisation. L'API per
 7. Conclusion
 
 Cette API vise à offrir une structure claire et professionnelle pour la gestion des commandes et produits d’un kiosque de commande. Elle est conçue pour être évolutive, maintenable, et flexible, tout en permettant une intégration facile avec l'interface utilisateur en front-end. En séparant la logique d'accès aux données, les hooks personnalisés et les types de données, nous assurons un code propre et facile à faire évoluer à mesure que de nouvelles fonctionnalités sont ajoutées.
+
+Il y aussi une particuliarité que j'ai pensé a la bdd. C'est a la factorisation avec la gestion des langues. Et second point c'est la périnité dans l'historique des données. En effet j'ai une table d'historique des prix qui peuvent évoluer mais a l'instant t sont toujours indexés. Dans ma partie admin je souhaite mettre en evidence ce point. Apporter un objectif congret!
+
 Points clés à développer dans la suite :
 
     Tests unitaires et d'intégration pour chaque endpoint.

@@ -16,7 +16,8 @@ function FilterButtons ({ setIdType }: FilterButtonsProps) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetchTypes(language);          
+                const res = await fetchTypes(language); 
+                        
                 setTypes(res);
             } catch (error) {
                 console.error("Erreur lors de la récupération des types", error);

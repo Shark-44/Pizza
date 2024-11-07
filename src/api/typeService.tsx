@@ -1,14 +1,10 @@
-import axiosInstance from './axiosInstance';
+// src/services/typeService.ts
 import { Type } from '../types/types';
-
+import { apiCall } from './wrapper';
 
 export const fetchTypes = async (lang: string): Promise<Type[]> => {
-  
-  try {
-    const response = await axiosInstance.get<Type[]>(`/types?lang=${lang}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la récupération des types:', error);
-    throw new Error('Impossible de récupérer les types');
-  }  
+  return apiCall<Type[]>('get', `/types?lang=${lang}`, {
+    params: { lang },
+    errorNamespace: 'api.fetch.types' 
+  });
 };
