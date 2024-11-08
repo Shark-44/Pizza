@@ -8,7 +8,7 @@ import OrderValidation from "./pages/OrderValidation";
 import Admin from "./pages/Admin";
 
 function App() {
-  const [adminVisible, setAdminVisible] = useState(false);
+  const [, setAdminVisible] = useState(false);
   const navigate = useNavigate();  
   const location = useLocation();  
   useEffect(() => {
