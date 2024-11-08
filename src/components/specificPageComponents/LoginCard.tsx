@@ -1,18 +1,29 @@
 import { useState } from "react";
-
+import { login } from "../../api/userService";
+import { User } from "../../types/types";
 
 const LoginCard = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState<User | null>(null); 
+  const [error, setError] = useState<string | null>(null);  
 
-  const handleSubmit = () => {
-    // Logique de soumission du formulaire
+  const handleSubmit = async () => {
+    try {
+      const loggedInUser = await login(name, password);
+      console.log("Utilisateur connecté:", loggedInUser); 
+      setUser(loggedInUser);
+      setError(null);
+    } catch (err) {
+      console.error("Erreur de connexion :", err); 
+      setError("Erreur de connexion, vérifiez vos identifiants.");
+    }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
             Identifiez-vous
           </h1>
@@ -25,17 +36,13 @@ const LoginCard = () => {
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
             value={name}
             onChange={(event) => {
-              if (
-                event.target.value.includes(">") ||
-                event.target.value.includes("<")
-              ) {
-                return;
+              if (!event.target.value.includes(">") && !event.target.value.includes("<")) {
+                setName(event.target.value);
               }
-              setName(event.target.value);
             }}
           />
 
-          <label htmlFor="login-input" className="block text-lg text-gray-700 mb-2">
+          <label htmlFor="password-input" className="block text-lg text-gray-700 mb-2">
             Mot de passe
           </label>
           <input
@@ -44,15 +51,13 @@ const LoginCard = () => {
             placeholder="Password"
             value={password}
             onChange={(event) => {
-              if (
-                event.target.value.includes(">") ||
-                event.target.value.includes("<")
-              ) {
-                return;
+              if (!event.target.value.includes(">") && !event.target.value.includes("<")) {
+                setPassword(event.target.value);
               }
-              setPassword(event.target.value);
             }}
           />
+
+          {error && <p className="text-red-500 mb-4">{error}</p>} {/* Affichage des erreurs */}
 
           <input
             type="button"
