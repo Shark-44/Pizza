@@ -5,6 +5,6 @@ import { apiCall } from './wrapper';
 export const fetchTypes = async (lang: string): Promise<Type[]> => {
   return apiCall<Type[]>('get', `/types?lang=${lang}`, {
     params: { lang },
-    errorNamespace: 'api.fetch.types' 
+    errorNamespace: '{lang}.api.fetch.types' 
   });
 };

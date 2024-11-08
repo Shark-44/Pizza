@@ -14,7 +14,7 @@ export const addItem = async (
 
   return apiCall<Basket>('post', '/basket', {
     data: orderData,
-    errorNamespace: 'api.addItem.basket',
+    errorNamespace: '{lang}.api.addItem.basket',
   });
 };
 
@@ -32,7 +32,7 @@ export const upQuantite = async (
 
   return apiCall<Basket>('put', '/basket', {
     data: orderData,
-    errorNamespace: 'api.updateQuantity.basket',
+    errorNamespace: '{lang}.api.updateQuantity.basket',
   });
 };
 
@@ -45,6 +45,6 @@ export const deleteBasket = async (
 
   return apiCall<void>('delete', '/basket', {
     data: requestData,
-    errorNamespace: 'api.deleteItem.basket',
+    errorNamespace: '{lang}.api.deleteItem.basket',
   });
 };
