@@ -82,3 +82,8 @@ export interface SidebarProps {
   orderId: number; 
 }
 
+export interface User {
+  iduser: number;
+  name: string;
+  password: string;
+}
