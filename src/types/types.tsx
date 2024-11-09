@@ -83,6 +83,7 @@ export interface SidebarProps {
 }
 
 export interface User {
+  iduser: number;
   name: string;
   password: string;
 }

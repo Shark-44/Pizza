@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { login } from "../../api/userService";
-import { User } from "../../types/types";
 
 const LoginCard = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState<User | null>(null); 
+  const [userId, setUserId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);  
 
   const handleSubmit = async () => {
     try {
       const loggedInUser = await login(name, password);
       console.log("Utilisateur connecté:", loggedInUser); 
-      setUser(loggedInUser);
+      setUserId(loggedInUser.iduser);
       setError(null);
     } catch (err) {
       console.error("Erreur de connexion :", err); 
