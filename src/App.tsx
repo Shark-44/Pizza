@@ -1,7 +1,7 @@
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import './App.css';
-import Banner from "./components/specificPageComponents/Banner";
+
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
 import OrderValidation from "./pages/OrderValidation";

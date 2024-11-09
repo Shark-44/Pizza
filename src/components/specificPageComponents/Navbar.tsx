@@ -1,11 +1,11 @@
-
 import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, ListItemIcon, Typography } from '@mui/material';
 import { AccountCircle, Home, AddBox, Settings } from '@mui/icons-material';
-import { useState } from "react"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -13,7 +13,6 @@ function Navbar() {
 
   return (
     <>
-     
       <AppBar position="sticky">
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={toggleDrawer} aria-label="menu">
@@ -27,25 +26,29 @@ function Navbar() {
       <Drawer open={open} onClose={toggleDrawer}>
         <List>
           {/* Page d'accueil */}
-          <ListItem button onClick={() => console.log("Accueil")}>
+          <ListItem component="a" onClick={() => navigate('/')}>
             <ListItemIcon><Home /></ListItemIcon>
-            <ListItemText primary="Accueil" />
+            <ListItemText primary="Retour a l'application" />
+          </ListItem>
+          <ListItem component="a" onClick={() => navigate('/admin')}>
+            <ListItemIcon><Home /></ListItemIcon>
+            <ListItemText primary="Page admin" />
           </ListItem>
 
           {/* Page création d'utilisateur */}
-          <ListItem button onClick={() => console.log("Création utilisateur")}>
+          <ListItem component="a" onClick={() => navigate('/admin-createuser')}>
             <ListItemIcon><AddBox /></ListItemIcon>
             <ListItemText primary="Créer un utilisateur" />
           </ListItem>
 
           {/* Page paramètres */}
-          <ListItem button onClick={() => console.log("Paramètres")}>
+          <ListItem component="a" onClick={() => navigate('/admin-settings')}>
             <ListItemIcon><Settings /></ListItemIcon>
             <ListItemText primary="Paramètres" />
           </ListItem>
 
           {/* Profil utilisateur */}
-          <ListItem button onClick={() => console.log("Profil")}>
+          <ListItem component="a" onClick={() => navigate('/admin-profile')}>
             <ListItemIcon><AccountCircle /></ListItemIcon>
             <ListItemText primary="Mon Profil" />
           </ListItem>
