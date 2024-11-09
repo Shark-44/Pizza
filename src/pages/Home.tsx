@@ -7,6 +7,7 @@ import { useOrderManagement } from '../hooks/useOrderManagement';
 import LanguageSelector from "../components/specificPageComponents/LanguageSelector";
 import TonyImage from '../assets/Images/Tony.webp';
 import { useTranslation } from 'react-i18next';
+import Banner from "../components/specificPageComponents/Banner";
 
 const Home = () => {
   const { t } = useTranslation();
@@ -49,6 +50,8 @@ const Home = () => {
   }
 
   return (
+    <>
+    <Banner />
     <div className="bg-yellow-50 h-screen flex flex-col justify-center items-center">
       <img 
         src={TonyImage} 
@@ -68,6 +71,7 @@ const Home = () => {
       )}
       <LanguageSelector />
     </div>
+    </>
   );
 };
 export default Home;

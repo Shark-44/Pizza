@@ -7,6 +7,7 @@ import Orders from "./pages/Orders";
 import OrderValidation from "./pages/OrderValidation";
 import Admin from "./pages/Admin";
 import CreateUser from "./pages/CreateUser";
+import Navbar from "./components/specificPageComponents/Navbar";
 
 function App() {
   const [, setAdminVisible] = useState(false);
@@ -24,9 +25,10 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeydown);
   }, [navigate]);
 
+  const showNavbar = location.pathname !== "/" && location.pathname !== "/Order" && location.pathname !== "/Order-validation";
   return (
     <>
-      {location.pathname !== "/admin" && <Banner />}
+       {showNavbar && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
