@@ -5,6 +5,7 @@ import Sidebar from "../components/specificPageComponents/Sidebar";
 import useFetchProducts from "../hooks/useFetchProducts";
 import { addItem, upQuantite } from '../api/basketService';
 import { useLocation } from "react-router-dom";
+import Banner from "../components/specificPageComponents/Banner";
 
 const Orders = () => {
     const [idType, setIdType] = useState<number | undefined>(undefined); 
@@ -53,18 +54,21 @@ const Orders = () => {
     
 
     return (
-        <div className="bg-yellow-50 min-h-screen">
-            <Sidebar orderItems={basket} setIdType={setIdType} orderId={orderId} />
-            <div className="bg-yellow-50 flex-1 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-20 ml-64">
-                {error ? (
-                    <p>{error}</p>
-                ) : (
-                    products.map((product: Product) => (
-                        <ProductCard key={product.id} product={product} onAddToBasket={handleAddToBasket} />
-                    ))
-                )}
+        <>
+            <Banner />
+            <div className="bg-yellow-50 min-h-screen">
+                <Sidebar orderItems={basket} setIdType={setIdType} orderId={orderId} />
+                <div className="bg-yellow-50 flex-1 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-20 ml-64">
+                    {error ? (
+                        <p>{error}</p>
+                    ) : (
+                        products.map((product: Product) => (
+                            <ProductCard key={product.id} product={product} onAddToBasket={handleAddToBasket} />
+                        ))
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
