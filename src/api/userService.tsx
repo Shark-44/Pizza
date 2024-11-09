@@ -20,3 +20,17 @@ export const logout = async (): Promise<User> => {
         errorNamespace: '{lang}.api.logout.user',
     });
 };
+
+export const createUser = async (
+    name: string,
+    password: string
+  ): Promise<User> => {
+    const userData = {
+        name,
+        password,
+    };
+    return apiCall<User>('post', '/admin-user', {
+      data: userData,
+      errorNamespace: '.api.createuser.user',
+    });
+  };

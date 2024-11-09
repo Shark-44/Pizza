@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Orders from "./pages/Orders";
 import OrderValidation from "./pages/OrderValidation";
 import Admin from "./pages/Admin";
+import CreateUser from "./pages/CreateUser";
 
 function App() {
   const [, setAdminVisible] = useState(false);
@@ -32,6 +33,7 @@ function App() {
         <Route path="/Order" element={<Orders />} />
         <Route path="/Order-validation" element={<OrderValidation />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin-createuser" element={<CreateUser />} />
       </Routes>
     </>
   );
