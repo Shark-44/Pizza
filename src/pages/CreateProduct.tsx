@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, ChangeEvent } from "react";
 import { fetchTypes } from "../api/typeService";
 import { Type } from "../types/types";
+
 
 const CreateProduct = () => {
     const [types, setTypes] = useState<Type[]>([]);
@@ -84,6 +85,16 @@ const CreateProduct = () => {
         }
     };
 
+    const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            setProductData((prevData) => ({
+                ...prevData,
+                photoProduit: URL.createObjectURL(file) // Génère l'URL pour la prévisualisation
+            }));
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-8 bg-white shadow-md rounded-lg">
             <div className="mb-4">
@@ -103,15 +114,23 @@ const CreateProduct = () => {
             </div>
 
             <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Photo URL</label>
+                <label className="block text-gray-700 text-sm font-bold mb-2">Photo du produit</label>
                 <input
-                    type="text"
+                    type="file"
                     name="photoProduit"
-                    placeholder="URL de la photo"
-                    value={productData.photoProduit}
-                    onChange={(e) => handleInputChange(e, setProductData)}
+                    accept="image/*"
+                    onChange={handleImageUpload}
                     className="w-full p-2 border border-gray-300 rounded"
                 />
+                {productData.photoProduit && (
+                    <div className="mt-4">
+                        <img
+                            src={productData.photoProduit}
+                            alt="Prévisualisation"
+                            className="w-48 h-48 object-contain border rounded"
+                        />
+                    </div>
+                )}
             </div>
 
             <div className="mb-4">
@@ -127,7 +146,7 @@ const CreateProduct = () => {
                 </label>
             </div>
 
-            <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-4">Traductions du produit</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-4">Nom du produit et les traductions</h3>
             {["fr", "gb", "it"].map((lang) => (
                 <div key={lang} className="mb-4">
                     <h4 className="text-md font-bold text-gray-700 mb-2">Langue : {lang.toUpperCase()}</h4>
