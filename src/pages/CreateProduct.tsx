@@ -8,6 +8,12 @@ interface TranslationItem {
     nomproduit: string;
     descriptionProduit: string;
 }
+//test
+const date: Date = new Date();
+const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: '2-digit' };
+const customFormattedDate: string = date.toLocaleDateString('fr-FR', options);
+console.log(customFormattedDate);
+
 
 const CreateProduct = () => {
     const [types, setTypes] = useState<Type[]>([]);
@@ -28,7 +34,7 @@ const CreateProduct = () => {
     });
 
     const [priceData, setPriceData] = useState({
-        dateprix: new Date().toISOString().split("T")[0],
+        dateprix: customFormattedDate,
         ancienPrix: 0,
         nouveauPrix: 0
     });
