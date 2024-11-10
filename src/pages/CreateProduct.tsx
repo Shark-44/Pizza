@@ -1,7 +1,13 @@
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { fetchTypes } from "../api/typeService";
 import { Type } from "../types/types";
+import { creatproduct } from "../api/productService";
 
+interface TranslationItem {
+    language_code: string;
+    nomproduit: string;
+    descriptionProduit: string;
+}
 
 const CreateProduct = () => {
     const [types, setTypes] = useState<Type[]>([]);
@@ -12,13 +18,13 @@ const CreateProduct = () => {
         photoProduit: "",
         carte: false,
         type_id: "",
-        prix_id: ""
+        photoPrevisuale: ""
     });
 
     const [translationData, setTranslationData] = useState({
-        fr: { nomProduit: "", descriptionProduit: "" },
-        gb: { nomProduit: "", descriptionProduit: "" },
-        it: { nomProduit: "", descriptionProduit: "" }
+        fr: { nomproduit: "", descriptionProduit: "" },
+        gb: { nomproduit: "", descriptionProduit: "" },
+        it: { nomproduit: "", descriptionProduit: "" }
     });
 
     const [priceData, setPriceData] = useState({
@@ -40,21 +46,13 @@ const CreateProduct = () => {
         fetchData();
     }, []);
 
-    const handleOptionChange = (event) => {
+    const handleOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const selectedTypeId = event.target.value;
         setSelectedOption(selectedTypeId);
         setProductData((prev) => ({ ...prev, type_id: selectedTypeId }));
     };
 
-    const handleInputChange = (event, setDataFunction) => {
-        const { name, value } = event.target;
-        setDataFunction((prevData) => ({
-            ...prevData,
-            [name]: value
-        }));
-    };
-
-    const handleTranslationChange = (languageCode, field, value) => {
+    const handleTranslationChange = (languageCode: string, field: string, value: string) => {
         setTranslationData((prevData) => ({
             ...prevData,
             [languageCode]: {
@@ -64,21 +62,49 @@ const CreateProduct = () => {
         }));
     };
 
-    const handlePriceChange = (event) => {
-        const value = event.target.value;
-        setPriceData({
-            dateprix: priceData.dateprix,
-            ancienPrix: Number(value),
-            nouveauPrix: Number(value)
-        });
+    const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = Number(event.target.value);
+        setPriceData((prev) => ({
+            ...prev,
+            ancienPrix: value,
+            nouveauPrix: value  
+        }));
     };
 
-    const handleSubmit = async (event) => {
+
+    const formatTranslationsForBackend = (): TranslationItem[] => {
+        return Object.entries(translationData).map(([language_code, data]) => ({
+            language_code,
+            nomproduit: data.nomproduit,
+            descriptionProduit: data.descriptionProduit
+        }));
+    };
+
+    const handleSubmit = async (event: { preventDefault: () => void }) => {
         event.preventDefault();
         try {
-            console.log("Données du produit:", productData);
-            console.log("Traductions du produit:", translationData);
-            console.log("Prix du produit:", priceData);
+            // Format the product data
+            const formattedProduct = {
+                ...productData,
+                carte: productData.carte ? 1 : 0,
+                type_id: Number(productData.type_id)
+            };
+
+            // Create the request data
+            const requestData = {
+                price: priceData,
+                product: formattedProduct,
+                translations: formatTranslationsForBackend()
+            };
+
+            console.log('Données envoyées au backend:', requestData);
+
+            const response = await creatproduct(
+                requestData.price,
+                requestData.product,
+                requestData.translations
+            );
+            
             alert("Produit créé avec succès !");
         } catch (error) {
             console.error("Erreur lors de la création du produit", error);
@@ -90,13 +116,15 @@ const CreateProduct = () => {
             const file = event.target.files[0];
             setProductData((prevData) => ({
                 ...prevData,
-                photoProduit: URL.createObjectURL(file) // Génère l'URL pour la prévisualisation
+                photoProduit: file.name,
+                photoPrevisuale: URL.createObjectURL(file)
             }));
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-8 bg-white shadow-md rounded-lg">
+            {/* Type selection */}
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Type de produit</label>
                 <select
@@ -113,6 +141,7 @@ const CreateProduct = () => {
                 </select>
             </div>
 
+            {/* Image upload */}
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Photo du produit</label>
                 <input
@@ -122,10 +151,10 @@ const CreateProduct = () => {
                     onChange={handleImageUpload}
                     className="w-full p-2 border border-gray-300 rounded"
                 />
-                {productData.photoProduit && (
+                {productData.photoPrevisuale && (
                     <div className="mt-4">
                         <img
-                            src={productData.photoProduit}
+                            src={productData.photoPrevisuale}
                             alt="Prévisualisation"
                             className="w-48 h-48 object-contain border rounded"
                         />
@@ -133,6 +162,7 @@ const CreateProduct = () => {
                 )}
             </div>
 
+            {/* Card display option */}
             <div className="mb-4">
                 <label className="inline-flex items-center text-gray-700 text-sm font-bold">
                     <input
@@ -146,6 +176,7 @@ const CreateProduct = () => {
                 </label>
             </div>
 
+            {/* Translations */}
             <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-4">Nom du produit et les traductions</h3>
             {["fr", "gb", "it"].map((lang) => (
                 <div key={lang} className="mb-4">
@@ -153,8 +184,8 @@ const CreateProduct = () => {
                     <input
                         type="text"
                         placeholder={`Nom du produit (${lang.toUpperCase()})`}
-                        value={translationData[lang].nomProduit}
-                        onChange={(e) => handleTranslationChange(lang, "nomProduit", e.target.value)}
+                        value={translationData[lang].nomproduit}
+                        onChange={(e) => handleTranslationChange(lang, "nomproduit", e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded mb-2"
                     />
                     <textarea
@@ -166,15 +197,18 @@ const CreateProduct = () => {
                 </div>
             ))}
 
+            {/* Price */}
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Prix du produit</label>
                 <input
                     type="number"
-                    name="ancienPrix"
+                    name="prix"
                     placeholder="Prix du produit"
-                    value={priceData.ancienPrix}
+                    value={priceData.nouveauPrix}  
                     onChange={handlePriceChange}
                     className="w-full p-2 border border-gray-300 rounded"
+                    min="0"
+                    step="0.01"
                 />
             </div>
 
