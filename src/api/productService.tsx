@@ -36,7 +36,7 @@ export const fetchProductById = async (id: number, lang: string): Promise<Produc
 // creer un produit
 export const creatproduct = async (
   price: {
-      dateprix: Date;
+      dateprix: Date | string;
       ancienPrix: number;
       nouveauPrix: number;
   },

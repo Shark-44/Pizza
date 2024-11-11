@@ -87,3 +87,10 @@ export interface User {
   name: string;
   password: string;
 }
+
+export interface TranslationItem {
+  [languageCode: string]: {
+      nomproduit: string;
+      descriptionProduit: string;
+  };
+}

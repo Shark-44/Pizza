@@ -1,133 +1,91 @@
-import { useState, useEffect, ChangeEvent } from "react";
-import { fetchTypes } from "../api/typeService";
-import { Type } from "../types/types";
+import { useState, ChangeEvent } from "react";
+import useFetchTypes from "../hooks/useFetchTypes"
+import useProductData from "../hooks/useProductData";
+import useTranslationData from "../hooks/useTranslationData";
+import usePriceData from "../hooks/usePriceData";
 import { creatproduct } from "../api/productService";
-
-interface TranslationItem {
-    language_code: string;
-    nomproduit: string;
-    descriptionProduit: string;
-}
-//test
-const date: Date = new Date();
-const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: '2-digit' };
-const customFormattedDate: string = date.toLocaleDateString('fr-FR', options);
-console.log(customFormattedDate);
-
+import instance from "../api/axiosInstance";
 
 const CreateProduct = () => {
-    const [types, setTypes] = useState<Type[]>([]);
-    const [selectedOption, setSelectedOption] = useState("");
-    const language = "fr";
+     const types = useFetchTypes("fr");
+    const { productData, setProductData, handleImageUpload } = useProductData();
+    const { translationData, handleTranslationChange } = useTranslationData();
+    const { priceData, handlePriceChange } = usePriceData();
+    const [selectedOption, setSelectedOption] = useState(productData.type_id || "");
 
-    const [productData, setProductData] = useState({
-        photoProduit: "",
-        carte: false,
-        type_id: "",
-        photoPrevisuale: ""
-    });
-
-    const [translationData, setTranslationData] = useState({
-        fr: { nomproduit: "", descriptionProduit: "" },
-        gb: { nomproduit: "", descriptionProduit: "" },
-        it: { nomproduit: "", descriptionProduit: "" }
-    });
-
-    const [priceData, setPriceData] = useState({
-        dateprix: customFormattedDate,
-        ancienPrix: 0,
-        nouveauPrix: 0
-    });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetchTypes(language);
-                setTypes(res);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des types", error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const handleOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        const selectedTypeId = event.target.value;
-        setSelectedOption(selectedTypeId);
-        setProductData((prev) => ({ ...prev, type_id: selectedTypeId }));
+    const handleOptionChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        setSelectedOption(value);
+        setProductData((prev) => ({ ...prev, type_id: value }));
     };
 
-    const handleTranslationChange = (languageCode: string, field: string, value: string) => {
-        setTranslationData((prevData) => ({
-            ...prevData,
-            [languageCode]: {
-                ...prevData[languageCode],
-                [field]: value
-            }
-        }));
-    };
-
-    const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = Number(event.target.value);
-        setPriceData((prev) => ({
-            ...prev,
-            ancienPrix: value,
-            nouveauPrix: value  
-        }));
-    };
-
-
-    const formatTranslationsForBackend = (): TranslationItem[] => {
-        return Object.entries(translationData).map(([language_code, data]) => ({
-            language_code,
+    const formatTranslationsForBackend = (): { language_code: string; nomproduit: string; descriptionProduit: string }[] => {
+        return Object.entries(translationData).map(([languageCode, data]) => ({
+            language_code: languageCode, 
             nomproduit: data.nomproduit,
             descriptionProduit: data.descriptionProduit
         }));
     };
 
+    const handleImageUploadToServer = async (file: File | null, typeId: string) => {
+        if (!file) return null;
+    
+        const formDataToSend = new FormData();
+        formDataToSend.append("myfile", file);
+    
+        const selectedType = types.find(type => type.id === Number(typeId));
+        const dossier = selectedType ? selectedType.nomtype : "default";
+    
+        try {
+            const response = await instance.post(`/upload/${dossier}`, formDataToSend, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            console.log("Image envoyée avec succès :", response.data);
+            return response.data.imageUrl; 
+        } catch (error) {
+            console.error("Erreur lors de l'envoi de l'image :", error);
+            return null;
+        }
+    };
+    
     const handleSubmit = async (event: { preventDefault: () => void }) => {
         event.preventDefault();
+    
         try {
-            // Format the product data
+            
+            const imageUrl = productData.photoFile
+                ? await handleImageUploadToServer(productData.photoFile, productData.type_id)
+                : "";
+                
             const formattedProduct = {
                 ...productData,
                 carte: productData.carte ? 1 : 0,
-                type_id: Number(productData.type_id)
+                type_id: Number(productData.type_id),
+                photoProduit: imageUrl || productData.photoProduit 
             };
-
-            // Create the request data
+                
             const requestData = {
                 price: priceData,
                 product: formattedProduct,
                 translations: formatTranslationsForBackend()
             };
-
-            console.log('Données envoyées au backend:', requestData);
-
+    
+            console.log("Données envoyées au backend:", requestData);
+               
             const response = await creatproduct(
                 requestData.price,
                 requestData.product,
                 requestData.translations
             );
-            
+            console.log(response)
             alert("Produit créé avec succès !");
         } catch (error) {
             console.error("Erreur lors de la création du produit", error);
         }
     };
-
-    const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const file = event.target.files[0];
-            setProductData((prevData) => ({
-                ...prevData,
-                photoProduit: file.name,
-                photoPrevisuale: URL.createObjectURL(file)
-            }));
-        }
-    };
-
+    
     return (
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-8 bg-white shadow-md rounded-lg">
             {/* Type selection */}
