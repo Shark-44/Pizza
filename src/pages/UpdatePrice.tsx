@@ -2,6 +2,8 @@ import { useState } from "react";
 import useFetchTypes from "../hooks/useFetchTypes";
 import useFetchProducts from "../hooks/useFetchProducts";
 import { Plus, Minus } from "lucide-react";
+import { updatedPrice } from "../api/priceService";
+import { PriceUpdateRequest } from "../types/types";
 
 type UpdatedPrices = {
     [key: number]: number;
@@ -20,23 +22,26 @@ const ProductTableByType = () => {
     const handlePriceChange = (productId: number, delta: number) => {
         setUpdatedPrices((prevPrices) => {
             const currentPrice = prevPrices[productId] ?? Number(products.find(p => p.id === productId)?.nouveauPrix) ?? 0;
-            return { ...prevPrices, [productId]: currentPrice + delta };
+            const newPrice = (currentPrice + delta).toFixed(2);  
+    
+            return { ...prevPrices, [productId]: parseFloat(newPrice) };  
         });
     };
 
-    const updatePrice = async (productId: number, newPrice: number) => {
+    const updatePrice = async (productId: number, nouveauPrix: number) => {
+        const produit = products.find(p => p.id === productId);
+        if (!produit) return;
+
+        const priceData: PriceUpdateRequest = {
+            dateprix: new Date().toISOString().split("T")[0],
+            ancienPrix: produit.nouveauPrix,
+            nouveauPrix: nouveauPrix,
+            produit_id: productId,
+        };
+
         try {
-            const response = await fetch(`yourApiUrl/products/${productId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ nouveauPrix: newPrice }),
-            });
-            if (!response.ok) {
-                throw new Error('Erreur lors de la mise à jour du prix');
-            }
-            console.log(`Prix du produit ${productId} mis à jour avec succès !`);
+            const response = await updatedPrice(priceData);
+            console.log(`Prix du produit ${productId} mis à jour avec succès !`,response);
         } catch (error) {
             console.error('Erreur lors de l\'envoi du prix mis à jour:', error);
         }
@@ -82,14 +87,14 @@ const ProductTableByType = () => {
                                                     </td>
                                                     <td className="px-6 py-4 text-right">
                                                          <button
-                                                            onClick={() => handlePriceChange(product.id, -1)}
+                                                            onClick={() => handlePriceChange(product.id, -.05)}
                                                             className="p-1 rounded hover:bg-gray-100"
                                                         >
                                                             <Minus className="w-4 h-4" />
                                                         </button>
                                                         {Number(product.nouveauPrix || 0).toFixed(2)} €
                                                         <button
-                                                            onClick={() => handlePriceChange(product.id, 1)}
+                                                            onClick={() => handlePriceChange(product.id, .05)}
                                                             className="p-1 rounded hover:bg-gray-100"
                                                         >
                                                             <Plus className="w-4 h-4" />
@@ -97,9 +102,7 @@ const ProductTableByType = () => {
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center space-x-2">
-
                                                             <span>{currentPrice.toFixed(2)} €</span>
-
                                                             <button
                                                                 onClick={() => updatePrice(product.id, currentPrice)}
                                                                 className="ml-2 p-1 rounded bg-green-500 text-white"

@@ -94,3 +94,17 @@ export interface TranslationItem {
       descriptionProduit: string;
   };
 }
+
+export interface Price {
+  id: number;
+  dateprix: Date | string;
+  ancienPrix: number;
+  nouveauPrix: number;
+  produit_id: number;
+}
+export interface PriceUpdateRequest {
+  dateprix: Date | string;
+  ancienPrix: number;
+  nouveauPrix: number;
+  produit_id: number;
+}
