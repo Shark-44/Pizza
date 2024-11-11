@@ -41,6 +41,10 @@ function Navbar() {
             <ListItemText primary="Créer un utilisateur" />
           </ListItem>
 
+          <ListItem component="a" onClick={() => navigate('/admin-createproduct')}>
+            <ListItemIcon><AddBox /></ListItemIcon>
+            <ListItemText primary="Créer un produit" />
+          </ListItem>
           {/* Page paramètres */}
           <ListItem component="a" onClick={() => navigate('/admin-settings')}>
             <ListItemIcon><Settings /></ListItemIcon>

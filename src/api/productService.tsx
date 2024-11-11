@@ -33,4 +33,29 @@ export const fetchProductById = async (id: number, lang: string): Promise<Produc
     errorNamespace: '{lang}.api.fetch.productbyid' 
   });
 };
+// creer un produit
+export const creatproduct = async (
+  price: {
+      dateprix: Date | string;
+      ancienPrix: number;
+      nouveauPrix: number;
+  },
+  product: {
+      photoProduit: string;
+      carte: number;
+      type_id: number;
+  },
+  translations: Array<{
+      language_code: string;
+      nomproduit: string;
+      descriptionProduit: string;
+  }>
+): Promise<Product> => {
+  const productData = { price, product, translations };
+  
+  return apiCall<Product>('post', `/createproduct`, {
+      data: productData,
+      errorNamespace: 'api.post.createproduct'
+  });
+};
 
