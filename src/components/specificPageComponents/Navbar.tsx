@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, ListItemIcon, Typography } from '@mui/material';
-import { AccountCircle, Home, AddBox, Settings } from '@mui/icons-material';
+import { AccountCircle, Home, AddBox, Settings, PriceChange } from '@mui/icons-material';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -27,23 +27,28 @@ function Navbar() {
         <List>
           {/* Page d'accueil */}
           <ListItem component="a" onClick={() => navigate('/')}>
-            <ListItemIcon><Home /></ListItemIcon>
+            <ListItemIcon><Home style={{ fontSize: 32, color: 'red' }}/></ListItemIcon>
             <ListItemText primary="Retour a l'application" />
           </ListItem>
           <ListItem component="a" onClick={() => navigate('/admin')}>
-            <ListItemIcon><Home /></ListItemIcon>
+            <ListItemIcon><Home style={{ fontSize: 32, color: 'blue' }}/></ListItemIcon>
             <ListItemText primary="Page admin" />
           </ListItem>
 
           {/* Page création d'utilisateur */}
           <ListItem component="a" onClick={() => navigate('/admin-createuser')}>
-            <ListItemIcon><AddBox /></ListItemIcon>
+            <ListItemIcon><AddBox style={{ fontSize: 32, color: 'brown' }} /></ListItemIcon>
             <ListItemText primary="Créer un utilisateur" />
           </ListItem>
 
           <ListItem component="a" onClick={() => navigate('/admin-createproduct')}>
-            <ListItemIcon><AddBox /></ListItemIcon>
+            <ListItemIcon><AddBox style={{ fontSize: 32, color: 'brown' }} /></ListItemIcon>
             <ListItemText primary="Créer un produit" />
+          </ListItem>
+
+          <ListItem component="a" onClick={() => navigate('/admin-updateprice')}>
+            <ListItemIcon><PriceChange style={{ fontSize: 32, color: 'green' }}/></ListItemIcon>
+            <ListItemText primary="Modifier les prix" />
           </ListItem>
           {/* Page paramètres */}
           <ListItem component="a" onClick={() => navigate('/admin-settings')}>

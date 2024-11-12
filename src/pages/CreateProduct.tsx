@@ -7,8 +7,8 @@ import { creatproduct } from "../api/productService";
 import instance from "../api/axiosInstance";
 
 const CreateProduct = () => {
-     const types = useFetchTypes("fr");
-    const { productData, setProductData, handleImageUpload } = useProductData();
+    const types = useFetchTypes("fr");
+    const { productData, setProductData, handleImageUpload } = useProductData(types);
     const { translationData, handleTranslationChange } = useTranslationData();
     const { priceData, handlePriceChange } = usePriceData();
     const [selectedOption, setSelectedOption] = useState(productData.type_id || "");

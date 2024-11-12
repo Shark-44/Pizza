@@ -8,6 +8,7 @@ import OrderValidation from "./pages/OrderValidation";
 import Admin from "./pages/Admin";
 import CreateUser from "./pages/CreateUser";
 import CreateProduct from "./pages/CreateProduct";
+import UpdatePrice from "./pages/UpdatePrice";
 import Navbar from "./components/specificPageComponents/Navbar";
 import Test from "./pages/test";
 
@@ -39,6 +40,7 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin-createuser" element={<CreateUser />} />
         <Route path="/admin-createproduct" element={<CreateProduct />} />
+        <Route path="/admin-updateprice" element={<UpdatePrice />} />
         <Route path="/test" element={<Test />} />
       </Routes>
     </>
