@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, ListItemIcon, Typography } from '@mui/material';
-import { AccountCircle, Home, AddBox, Settings, PriceChange } from '@mui/icons-material';
+import { AccountCircle, Home, AddBox, Settings, PriceChange, TrendingUp } from '@mui/icons-material';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -49,6 +49,10 @@ function Navbar() {
           <ListItem component="a" onClick={() => navigate('/admin-updateprice')}>
             <ListItemIcon><PriceChange style={{ fontSize: 32, color: 'green' }}/></ListItemIcon>
             <ListItemText primary="Modifier les prix" />
+          </ListItem>
+          <ListItem component="a" onClick={() => navigate('/admin-orderhistory')}>
+            <ListItemIcon><TrendingUp style={{ fontSize: 32, color: 'green' }}/></ListItemIcon>
+            <ListItemText primary="Suivi des ventes" />
           </ListItem>
           {/* Page paramètres */}
           <ListItem component="a" onClick={() => navigate('/admin-settings')}>

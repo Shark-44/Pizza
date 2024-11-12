@@ -9,8 +9,10 @@ import Admin from "./pages/Admin";
 import CreateUser from "./pages/CreateUser";
 import CreateProduct from "./pages/CreateProduct";
 import UpdatePrice from "./pages/UpdatePrice";
+import OrderHistory from "./pages/OrderHistory";
 import Navbar from "./components/specificPageComponents/Navbar";
 import Test from "./pages/test";
+
 
 function App() {
   const [, setAdminVisible] = useState(false);
@@ -41,6 +43,7 @@ function App() {
         <Route path="/admin-createuser" element={<CreateUser />} />
         <Route path="/admin-createproduct" element={<CreateProduct />} />
         <Route path="/admin-updateprice" element={<UpdatePrice />} />
+        <Route path="/admin-orderhistory" element={<OrderHistory />} />
         <Route path="/test" element={<Test />} />
       </Routes>
     </>
