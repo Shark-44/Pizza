@@ -9,7 +9,7 @@ import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
 import useFetchOrdersHistory from "../hooks/useFetchOrdersHistory";
 import useFetchTypes from "../hooks/useFetchTypes"; 
 import { calculateTotalSales, calculateTotalPrice, calculateTotalQuantity } from '../utils/orderUtils';
-import { OrdersHistory, Type, FilterOption } from "../types/types";
+import { OrdersHistory, FilterOption } from "../types/types";
 import { useState } from "react";
 
 
@@ -23,45 +23,38 @@ const OrderHistory = () => {
   console.log(filter)
 
   const types = useFetchTypes("fr");
- console.log("tableau de type",ordersInProgress)
-// Préparation des données pour le graphique
-const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
-  const productQuantities: { [key: string]: number } = {};
+ /* const prepareChartData = (orders: OrdersHistory[], productCategories: string[]) => {
+    const productQuantities: { [key: string]: number } = {};
 
-  // Initialiser les quantités à 0 pour chaque type de produit
-  types.forEach((type) => {
-    productQuantities[type.nomtype] = 0; // Utilise 'nomtype' au lieu de 'nomType'
-  });
+    // Initialiser les quantités à 0 pour chaque catégorie
+    productCategories.forEach((category) => {
+      productQuantities[category] = 0;
+    });
 
-  console.log("Initial productQuantities:", productQuantities);
+    // Parcours des commandes et comptabilisation des produits
+    orders.forEach((order) => {
+      if (order.products) {
+        order.products.forEach((product) => {
+          if (productCategories.includes(product.nomProduit)) {
+            productQuantities[product.nomProduit] += product.quantiteCommande;
+          }
+        });
+      }
+    });
 
-  // Parcours des commandes pour accumuler les quantités par type de produit
-  orders.forEach((order) => {
-    if (order.products) {
-      order.products.forEach((product) => {
-        console.log("Processing product:", product);
-
-        if (productQuantities[product.nomtype] !== undefined) { // Utilise 'nomtype' ici aussi
-          productQuantities[product.nomtype] += product.quantiteCommande;
-        }
-      });
-    }
-  });
-
-  console.log("Final productQuantities:", productQuantities);
-
-  // Préparer les données pour le graphique en utilisant les noms des types comme catégories
-  return {
-    categories: types.map((type) => {
-      console.log("Category type.nomtype:", type.nomtype); // Log des catégories
-      return type.nomtype; // Utilise 'nomtype' ici
-    }),
-    seriesData: types.map((type) => productQuantities[type.nomtype] || 0), // Utilise 'nomtype' ici
+    // Structure des données pour le graphique
+    return {
+      categories: productCategories,
+      seriesData: productCategories.map((category) => productQuantities[category] || 0),
+    };
   };
-};
+*/
 
-
-  const chartData = prepareChartData(ordersInProgress, types);
+  
+  // Assurez-vous d'ajouter les données à chartData ici
+  
+  //const chartData = prepareChartData(ordersInProgress, types.map((type) => type.nomType));
+  
     
   const totalSales = calculateTotalSales(ordersInProgress);
   const totalPrice = calculateTotalPrice(ordersInProgress);
@@ -84,7 +77,7 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
     series: [
       {
         name: "Sales",
-        data: chartData.seriesData,
+        data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
       },
     ],
     options: {
@@ -121,7 +114,17 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
             fontWeight: 400,
           },
         },
-        categories: chartData.categories,
+        categories: [
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
       },
       yaxis: {
         labels: {
@@ -155,7 +158,6 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
       },
     },
   };
-  console.log(chartData)
   // Gestion des erreurs
   if (error) {
     return (
@@ -224,20 +226,21 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
             </div>
             <div>
               <Typography variant="h6" color="blue-gray">
-                Tableau de ventes
+                Bar Chart
               </Typography>
               <Typography
                 variant="small"
                 color="gray"
                 className="max-w-sm font-normal"
               >
-                 Visualisez les quantités vendues pour chaque type de produit.
+                Visualize your data in a simple way using the
+                @material-tailwind/react chart plugin.
               </Typography>
             </div>
           </CardHeader>
-        <CardBody className="px-2 pb-0">
-          <Chart {...chartConfig} />
-        </CardBody>
+          <CardBody className="px-2 pb-0">
+            <Chart {...chartConfig} />
+          </CardBody>
         </Card>
         </div>
       </div>

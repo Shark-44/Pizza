@@ -38,13 +38,13 @@ export interface ProductHistory {
   quantiteCommande: number;
   nouveauPrix: number;
   nomProduit: string;
-  nomType: string;
+  nomtype: string;
 }
 
 // Type de produit
 export interface Type {
   id: number;
-  nomType: string;
+  nomtype: string;
 }
 
 // Détails de commande simple
