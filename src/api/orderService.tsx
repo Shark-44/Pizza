@@ -1,10 +1,26 @@
 import { apiCall } from './wrapper';
-import { Order, FullOrder } from '../types/types';
+import { Order, FullOrder, OrdersHistory } from '../types/types';
 import { formatDateForDB } from '../utils/dateHelpers';
 
 // Récupérer toutes les commandes
 export const fetchOrders = async (lang: string): Promise<Order[]> => {
   return apiCall<Order[]>('get', `/orders?lang=${lang}`, {
+    params: { lang },
+    errorNamespace: 'api.fetch.orders',
+  });
+};
+/*Pour evolution avec filter
+export const fetchOrdershistory = async (
+  lang: string,
+  filter?: string 
+): Promise<OrdersHistory[]> => {
+  return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
+    params: { lang, ...(filter && { filter }) }, 
+    errorNamespace: 'api.fetch.orders',
+  });
+}; */
+export const fetchOrdershistory = async (lang: string): Promise<OrdersHistory[]> => {
+  return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
     params: { lang },
     errorNamespace: 'api.fetch.orders',
   });

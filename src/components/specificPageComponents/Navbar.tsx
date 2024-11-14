@@ -1,66 +1,163 @@
-import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, ListItemIcon, Typography } from '@mui/material';
-import { AccountCircle, Home, AddBox, Settings, PriceChange } from '@mui/icons-material';
+import { 
+  AppBar, 
+  Toolbar, 
+  IconButton, 
+  Drawer, 
+  List, 
+  ListItemButton,
+  ListItemText, 
+  ListItemIcon, 
+  Typography 
+} from '@mui/material';
+import { 
+  AccountCircle, 
+  Home, 
+  AddBox, 
+  Settings, 
+  PriceChange, 
+  TrendingUp,
+  Menu 
+} from '@mui/icons-material';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+
+// Création de styles personnalisés pour ListItemButton
+const StyledListItemButton = styled(ListItemButton)(() => ({
+  "&.Mui-selected": {
+    backgroundColor:'#3b82f6',
+    color: "white",
+    "& .MuiListItemIcon-root": {
+      color: "white"
+    }
+  },
+  "&.Mui-selected:hover": {
+    backgroundColor: "purple",
+    color: "white",
+    "& .MuiListItemIcon-root": {
+      color: "white"
+    }
+  },
+  "&:hover": {
+    backgroundColor: "grey",
+    color: "white",
+    "& .MuiListItemIcon-root": {
+      color: "white"
+    }
+  }
+}));
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  const handleNavigation = (index: number, path: string) => {
+    setSelectedIndex(index);
+    navigate(path);
+  };
+
   return (
     <>
       <AppBar position="sticky">
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer} aria-label="menu">
-            <Home />
+          <IconButton 
+            edge="start" 
+            color="inherit" 
+            onClick={toggleDrawer} 
+            aria-label="menu"
+          >
+            <Menu />
           </IconButton>
           <Typography variant="h6">Pizza Sorrizo</Typography>
         </Toolbar>
       </AppBar>
 
-      {/* Drawer (menu mobile latéral) */}
       <Drawer open={open} onClose={toggleDrawer}>
         <List>
-          {/* Page d'accueil */}
-          <ListItem component="a" onClick={() => navigate('/')}>
-            <ListItemIcon><Home style={{ fontSize: 32, color: 'red' }}/></ListItemIcon>
+          <StyledListItemButton
+            selected={selectedIndex === 0}
+            onClick={() => handleNavigation(0, '/')}
+          >
+            <ListItemIcon>
+              <Home style={{ fontSize: 32, color: 'red' }}/>
+            </ListItemIcon>
             <ListItemText primary="Retour a l'application" />
-          </ListItem>
-          <ListItem component="a" onClick={() => navigate('/admin')}>
-            <ListItemIcon><Home style={{ fontSize: 32, color: 'blue' }}/></ListItemIcon>
+          </StyledListItemButton>
+
+          <StyledListItemButton 
+            selected={selectedIndex === 1}
+            onClick={() => handleNavigation(1, '/admin')}
+          >
+            <ListItemIcon>
+              <Home style={{ fontSize: 32, color: 'blue' }}/>
+            </ListItemIcon>
             <ListItemText primary="Page admin" />
-          </ListItem>
+          </StyledListItemButton>
 
-          {/* Page création d'utilisateur */}
-          <ListItem component="a" onClick={() => navigate('/admin-createuser')}>
-            <ListItemIcon><AddBox style={{ fontSize: 32, color: 'brown' }} /></ListItemIcon>
+          <StyledListItemButton
+            selected={selectedIndex === 2}
+            onClick={() => handleNavigation(2, '/admin-createuser')}
+          >
+            <ListItemIcon>
+              <AddBox style={{ fontSize: 32, color: 'brown' }} />
+            </ListItemIcon>
             <ListItemText primary="Créer un utilisateur" />
-          </ListItem>
+          </StyledListItemButton>
 
-          <ListItem component="a" onClick={() => navigate('/admin-createproduct')}>
-            <ListItemIcon><AddBox style={{ fontSize: 32, color: 'brown' }} /></ListItemIcon>
+          <StyledListItemButton
+            selected={selectedIndex === 3}
+            onClick={() => handleNavigation(3, '/admin-createproduct')}
+          >
+            <ListItemIcon>
+              <AddBox style={{ fontSize: 32, color: 'brown' }} />
+            </ListItemIcon>
             <ListItemText primary="Créer un produit" />
-          </ListItem>
+          </StyledListItemButton>
 
-          <ListItem component="a" onClick={() => navigate('/admin-updateprice')}>
-            <ListItemIcon><PriceChange style={{ fontSize: 32, color: 'green' }}/></ListItemIcon>
+          <StyledListItemButton
+            selected={selectedIndex === 4}
+            onClick={() => handleNavigation(4, '/admin-updateprice')}
+          >
+            <ListItemIcon>
+              <PriceChange style={{ fontSize: 32, color: 'green' }}/>
+            </ListItemIcon>
             <ListItemText primary="Modifier les prix" />
-          </ListItem>
-          {/* Page paramètres */}
-          <ListItem component="a" onClick={() => navigate('/admin-settings')}>
-            <ListItemIcon><Settings /></ListItemIcon>
-            <ListItemText primary="Paramètres" />
-          </ListItem>
+          </StyledListItemButton>
 
-          {/* Profil utilisateur */}
-          <ListItem component="a" onClick={() => navigate('/admin-profile')}>
-            <ListItemIcon><AccountCircle /></ListItemIcon>
+          <StyledListItemButton
+            selected={selectedIndex === 5}
+            onClick={() => handleNavigation(5, '/admin-orderhistory')}
+          >
+            <ListItemIcon>
+              <TrendingUp style={{ fontSize: 32, color: 'green' }}/>
+            </ListItemIcon>
+            <ListItemText primary="Suivi des ventes" />
+          </StyledListItemButton>
+
+          <StyledListItemButton
+            selected={selectedIndex === 6}
+            onClick={() => handleNavigation(6, '/admin-settings')}
+          >
+            <ListItemIcon>
+              <Settings />
+            </ListItemIcon>
+            <ListItemText primary="Paramètres" />
+          </StyledListItemButton>
+
+          <StyledListItemButton
+            selected={selectedIndex === 7}
+            onClick={() => handleNavigation(7, '/admin-profile')}
+          >
+            <ListItemIcon>
+              <AccountCircle />
+            </ListItemIcon>
             <ListItemText primary="Mon Profil" />
-          </ListItem>
+          </StyledListItemButton>
         </List>
       </Drawer>
     </>
