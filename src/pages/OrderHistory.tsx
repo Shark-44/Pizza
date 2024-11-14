@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Card,
   CardBody,
@@ -7,9 +6,53 @@ import {
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
+import useFetchOrdersHistory from "../hooks/useFetchOrdersHistory";
+import { OrdersHistory } from "../types/types";
 
-// Composant principal de l'historique des commandes
-const OrderHistory: React.FC = () => {
+interface Product {
+  quantiteCommande: number | string; 
+}
+interface Order {
+  produits: Product[];
+  subOrders?: Product[]; 
+  prixtotalCommande?: number;
+}
+
+const OrderHistory = () => {
+  const { ordersHistory, error, loading } = useFetchOrdersHistory();
+  const ordersInProgress = ordersHistory.filter((order) => order.statusCommande === 'payé');
+
+// Fonction pour compter le nombre total de ventes
+const calculateTotalSales = (orders: string | any[]) => {
+  return orders.length;
+};
+
+//Fonction pour calculer la somme des prix
+const calculateTotalPrice = (orders:OrdersHistory[]) => {
+  return orders.reduce((sum, order) => sum + Number(order.prixtotalCommande), 0);
+};
+
+  // Fonction pour calculer la quantité des produits vendu
+  const calculateTotalQuantity = (orders: OrdersHistory[]) => {
+    return orders.reduce((sum, order) => {
+      if (!order.products) {
+        return sum;
+      }
+      
+      const orderTotal = order.products.reduce((productSum, product) => {
+        return productSum + (product.quantiteCommande || 0);
+      }, 0);
+      
+      return sum + orderTotal;
+    }, 0);
+  };
+  
+const totalSales = calculateTotalSales(ordersInProgress);
+const totalPrice = calculateTotalPrice(ordersInProgress);
+const totalQuantity = calculateTotalQuantity(ordersInProgress);
+
+
+
   // Données factices pour les boutons de filtre
   const filters = ['Aujourd’hui', 'Cette semaine', 'Ce mois-ci', 'Cette année'];
 
@@ -67,6 +110,24 @@ const OrderHistory: React.FC = () => {
     },
   };
 
+  // Gestion des erreurs
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-yellow-50">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  // Gestion du chargement
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-yellow-50">
+        <p className="text-blue-500">Chargement des données...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-4">
       {/* Section des filtres */}
@@ -87,42 +148,40 @@ const OrderHistory: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="p-4 bg-white rounded shadow-md">
             <h3 className="text-gray-500">Nombre total de ventes</h3>
-            <p className="text-xl font-semibold">475</p>
+            <p className="text-xl font-semibold">{totalSales}</p>
           </div>
           <div className="p-4 bg-white rounded shadow-md">
             <h3 className="text-gray-500">Prix total</h3>
-            <p className="text-xl font-semibold">€2,350</p>
+            <p className="text-xl font-semibold">{totalPrice}€</p>
           </div>
           <div className="p-4 bg-white rounded shadow-md">
             <h3 className="text-gray-500">Quantité totale vendue</h3>
-            <p className="text-xl font-semibold">475 unités</p>
+            <p className="text-xl font-semibold">{totalQuantity}  unités</p>
           </div>
         </div>
 
         {/* Section graphique */}
         <div className="flex-1 p-4 bg-white rounded shadow-md">
-          <Card children={undefined} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+          <Card>
             <CardHeader
-                          floated={false}
-                          shadow={false}
-                          color="transparent"
-                          className="flex flex-col gap-4 rounded-none md:flex-row md:items-center" children={undefined} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}            >
+              floated={false}
+              shadow={false}
+              color="transparent"
+              className="flex flex-col gap-4 rounded-none md:flex-row md:items-center"
+            >
               <div className="w-max rounded-lg bg-gray-900 p-5 text-white">
                 <Square3Stack3DIcon className="h-6 w-6" />
               </div>
               <div>
-                <Typography variant="h6" color="blue-gray" children={undefined} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                <Typography variant="h6" color="blue-gray">
                   Quantités vendues par produit
                 </Typography>
-                <Typography
-                                  variant="small"
-                                  color="gray"
-                                  className="max-w-sm font-normal" children={undefined} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                >
+                <Typography variant="small" color="gray" className="max-w-sm font-normal">
                   Visualisez les quantités vendues pour chaque type de produit.
                 </Typography>
               </div>
             </CardHeader>
-            <CardBody className="px-2 pb-0" children={undefined} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <CardBody className="px-2 pb-0">
               <Chart {...chartConfig} />
             </CardBody>
           </Card>
