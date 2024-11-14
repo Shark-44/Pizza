@@ -9,6 +9,16 @@ export const fetchOrders = async (lang: string): Promise<Order[]> => {
     errorNamespace: 'api.fetch.orders',
   });
 };
+/*Pour evolution avec filter
+export const fetchOrdershistory = async (
+  lang: string,
+  filter?: string 
+): Promise<OrdersHistory[]> => {
+  return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
+    params: { lang, ...(filter && { filter }) }, 
+    errorNamespace: 'api.fetch.orders',
+  });
+}; */
 export const fetchOrdershistory = async (lang: string): Promise<OrdersHistory[]> => {
   return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
     params: { lang },

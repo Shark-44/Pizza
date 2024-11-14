@@ -11,6 +11,9 @@ const useFetchOrdersHistory = () => {
         const fetchFullData = async () => {
             try {
                 setLoading(true);
+                /* Pour evolution avec filter
+                const data = await fetchOrdershistory("fr", filter);
+                 */
                 const data = await fetchOrdershistory("fr");
                 setOrdersHistory(data);
             } catch (error) {
@@ -21,6 +24,8 @@ const useFetchOrdersHistory = () => {
         };
 
         fetchFullData();
+ /* Pour evolution avec filter
+    }, [filter]);*/
     }, []);
 
     return { ordersHistory, error, loading };

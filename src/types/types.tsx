@@ -3,6 +3,13 @@ enum StatusCommande {
   EN_COURS = 'en cours',
   PAYE = 'payé'
 }
+// Définition de l'enum pour les filtres
+export enum FilterOption {
+  TODAY = "Aujourd’hui",
+  THIS_WEEK = "Cette semaine",
+  THIS_MONTH = "Ce mois-ci",
+  THIS_YEAR = "Cette année",
+}
 
 // Produit simple
 export interface Product {

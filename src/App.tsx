@@ -11,7 +11,7 @@ import CreateProduct from "./pages/CreateProduct";
 import UpdatePrice from "./pages/UpdatePrice";
 import OrderHistory from "./pages/OrderHistory";
 import Navbar from "./components/specificPageComponents/Navbar";
-import Test from "./pages/test";
+//import Test from "./pages/test";
 
 
 function App() {
@@ -44,7 +44,7 @@ function App() {
         <Route path="/admin-createproduct" element={<CreateProduct />} />
         <Route path="/admin-updateprice" element={<UpdatePrice />} />
         <Route path="/admin-orderhistory" element={<OrderHistory />} />
-        <Route path="/test" element={<Test />} />
+        {/*<Route path="/test" element={<Test />} />*/}
       </Routes>
     </>
   );

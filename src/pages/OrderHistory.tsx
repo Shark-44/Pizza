@@ -7,7 +7,8 @@ import {
 import Chart from "react-apexcharts";
 import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
 import useFetchOrdersHistory from "../hooks/useFetchOrdersHistory";
-import { OrdersHistory } from "../types/types";
+import { OrdersHistory, FilterOption } from "../types/types";
+import { useState } from "react";
 
 interface Product {
   quantiteCommande: number | string; 
@@ -19,10 +20,14 @@ interface Order {
 }
 
 const OrderHistory = () => {
+  /* Pour evoltion avec filter
+   const { ordersHistory, error, loading } = useFetchOrdersHistory(filter);
+  */
   const { ordersHistory, error, loading } = useFetchOrdersHistory();
   const ordersInProgress = ordersHistory.filter((order) => order.statusCommande === 'payé');
-
-// Fonction pour compter le nombre total de ventes
+  const [filter, setFilter] = useState<string | undefined>(undefined);
+console.log(filter)
+  // Fonction pour compter le nombre total de ventes
 const calculateTotalSales = (orders: string | any[]) => {
   return orders.length;
 };
@@ -54,7 +59,15 @@ const totalQuantity = calculateTotalQuantity(ordersInProgress);
 
 
   // Données factices pour les boutons de filtre
-  const filters = ['Aujourd’hui', 'Cette semaine', 'Ce mois-ci', 'Cette année'];
+  const filtersState: FilterOption[] = [
+    FilterOption.TODAY,
+    FilterOption.THIS_WEEK,
+    FilterOption.THIS_MONTH,
+    FilterOption.THIS_YEAR,
+  ];
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+  };
 
   // Configuration du graphique en barres
   const chartConfig = {
@@ -132,15 +145,19 @@ const totalQuantity = calculateTotalQuantity(ordersInProgress);
     <div className="container mx-auto p-4">
       {/* Section des filtres */}
       <div className="flex gap-4 mb-4">
-        {filters.map((filter) => (
+        {filtersState.map((currentFilter) => (
           <button
-            key={filter}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            key={currentFilter}
+            className={`px-4 py-2 rounded ${
+              filter === currentFilter ? 'bg-green-500 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'
+            }`}
+            onClick={() => handleFilterChange(currentFilter)}
           >
-            {filter}
+            {currentFilter}
           </button>
         ))}
       </div>
+
 
       {/* Section des indicateurs et du graphique */}
       <div className="flex gap-8">
