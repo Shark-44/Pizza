@@ -11,6 +11,8 @@ import CreateProduct from "./pages/CreateProduct";
 import UpdatePrice from "./pages/UpdatePrice";
 import OrderHistory from "./pages/OrderHistory";
 import Navbar from "./components/specificPageComponents/Navbar";
+import ProtectedRoute from "./components/specificPageComponents/ProtectedRoute";
+import { CurrentUserContextProvider } from "./contexts/authContexts";
 //import Test from "./pages/test";
 
 
@@ -32,7 +34,7 @@ function App() {
 
   const showNavbar = location.pathname !== "/" && location.pathname !== "/Order" && location.pathname !== "/Order-validation";
   return (
-    <>
+    <CurrentUserContextProvider>
        {showNavbar && <Navbar />}
 
       <Routes>
@@ -40,13 +42,15 @@ function App() {
         <Route path="/Order" element={<Orders />} />
         <Route path="/Order-validation" element={<OrderValidation />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin-createuser" element={<CreateUser />} />
-        <Route path="/admin-createproduct" element={<CreateProduct />} />
-        <Route path="/admin-updateprice" element={<UpdatePrice />} />
-        <Route path="/admin-orderhistory" element={<OrderHistory />} />
+        <Route element={<ProtectedRoute redirectPath="/" />}>
+          <Route path="/admin-createuser" element={<CreateUser />} />
+          <Route path="/admin-createproduct" element={<CreateProduct />} />
+          <Route path="/admin-updateprice" element={<UpdatePrice />} />
+          <Route path="/admin-orderhistory" element={<OrderHistory />} />
+        </Route>
         {/*<Route path="/test" element={<Test />} />*/}
       </Routes>
-    </>
+    </CurrentUserContextProvider>
   );
 }
 

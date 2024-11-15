@@ -1,17 +1,26 @@
 import { useState } from "react";
 import { login } from "../../api/userService";
+import { useAuthContext } from "../../contexts/authContexts";
+import Cookies from "js-cookie";
 
 const LoginCard = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [userId, setUserId] = useState<number | null>(null);
+  const { setUser } = useAuthContext();
+ 
   const [error, setError] = useState<string | null>(null);  
 
   const handleSubmit = async () => {
     try {
       const loggedInUser = await login(name, password);
       console.log("Utilisateur connecté:", loggedInUser); 
-      setUserId(loggedInUser.iduser);
+      const userId = Cookies.get('userId');
+  
+      if (userId) {
+        setUser(parseInt(userId, 10));
+      } else {
+        setUser(null); 
+      }
       setError(null);
     } catch (err) {
       console.error("Erreur de connexion :", err); 
