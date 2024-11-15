@@ -6,14 +6,14 @@ import  useLanguage  from '../hooks/useLanguage'
 // Hook personnalisé pour gérer les détails des produits
 export const useProductDetails = (orderItems: Basket[]) => {
   const { language } = useLanguage();
-  const [productDetails, setProductDetails] = useState<Map<number, Product | { nomproduit: string }>>(
+  const [productDetails, setProductDetails] = useState<Map<number, Product | { nomProduit: string }>>(
     new Map()
   );
   const [loadingProducts, setLoadingProducts] = useState<Set<number>>(new Set());
 
   const loadProductDetails = useCallback(async () => {
     const productsToLoad = orderItems
-      .map(item => item.produit_id)
+      .map(item => item.produitId)
       .filter(id => !productDetails.has(id) && !loadingProducts.has(id));
 
     if (productsToLoad.length === 0) return;
@@ -23,7 +23,7 @@ export const useProductDetails = (orderItems: Basket[]) => {
     // Temporairement marquer les produits comme "chargement" pour éviter les transitions visibles
     setProductDetails(prev => {
       const newDetails = new Map(prev);
-      productsToLoad.forEach(id => newDetails.set(id, { nomproduit: " " }));
+      productsToLoad.forEach(id => newDetails.set(id, { nomProduit: " " }));
       return newDetails;
     });
 
@@ -51,7 +51,7 @@ export const useProductDetails = (orderItems: Basket[]) => {
   }, [orderItems, loadProductDetails]);
 
   const getProductDisplay = useCallback(
-    (productId: number) => productDetails.get(productId)?.nomproduit || " ",
+    (productId: number) => productDetails.get(productId)?.nomProduit || " ",
     [productDetails]
   );
 

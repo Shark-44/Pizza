@@ -11,7 +11,7 @@ const CreateProduct = () => {
     const { productData, setProductData, handleImageUpload } = useProductData(types);
     const { translationData, handleTranslationChange } = useTranslationData();
     const { priceData, handlePriceChange } = usePriceData();
-    const [selectedOption, setSelectedOption] = useState(productData.type_id || "");
+    const [selectedOption, setSelectedOption] = useState(productData.typeId || "");
 
     const handleOptionChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const { value } = e.target;
@@ -19,11 +19,11 @@ const CreateProduct = () => {
         setProductData((prev) => ({ ...prev, type_id: value }));
     };
 
-    const formatTranslationsForBackend = (): { language_code: string; nomproduit: string; descriptionProduit: string }[] => {
+    const formatTranslationsForBackend = (): { language_code: string; nomProduit: string; descriptionProduit: string }[] => {
         return Object.entries(translationData).map(([languageCode, data]) => ({
             language_code: languageCode, 
-            nomproduit: data.nomproduit,
-            descriptionProduit: data.descriptionProduit
+            nomProduit: data.nomProduit || "",
+            descriptionProduit: data.descriptionProduit ||""
         }));
     };
 
@@ -34,7 +34,7 @@ const CreateProduct = () => {
         formDataToSend.append("myfile", file);
     
         const selectedType = types.find(type => type.id === Number(typeId));
-        const dossier = selectedType ? selectedType.nomtype : "default";
+        const dossier = selectedType ? selectedType.nomType : "default";
     
         try {
             const response = await instance.post(`/upload/${dossier}`, formDataToSend, {
@@ -56,13 +56,13 @@ const CreateProduct = () => {
         try {
             
             const imageUrl = productData.photoFile
-                ? await handleImageUploadToServer(productData.photoFile, productData.type_id)
+                ? await handleImageUploadToServer(productData.photoFile, productData.typeId)
                 : "";
                 
             const formattedProduct = {
                 ...productData,
                 carte: productData.carte ? 1 : 0,
-                type_id: Number(productData.type_id),
+                typeId: Number(productData.typeId),
                 photoProduit: imageUrl || productData.photoProduit 
             };
                 
@@ -99,7 +99,7 @@ const CreateProduct = () => {
                     <option value="">Sélectionner un type</option>
                     {types.map((type) => (
                         <option key={type.id} value={type.id}>
-                            {type.nomtype}
+                            {type.nomType}
                         </option>
                     ))}
                 </select>
@@ -148,7 +148,7 @@ const CreateProduct = () => {
                     <input
                         type="text"
                         placeholder={`Nom du produit (${lang.toUpperCase()})`}
-                        value={translationData[lang].nomproduit}
+                        value={translationData[lang].nomProduit}
                         onChange={(e) => handleTranslationChange(lang, "nomproduit", e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded mb-2"
                     />

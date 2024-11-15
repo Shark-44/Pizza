@@ -30,11 +30,11 @@ const Sidebar = ({ orderItems, setIdType, orderId }: SidebarProps) => {
           <div className="bg-gray-800 p-2 rounded-md overflow-y-auto max-h-[60vh]">
             {orderItems.map(item => (
               <div
-                key={item.produit_id}
+                key={item.produitId}
                 className="text-white flex justify-between p-2 border-b border-gray-700"
               >
                 <span className="truncate flex-1">
-                  {getProductDisplay(item.produit_id)}
+                  {getProductDisplay(item.produitId)}
                 </span>
                 <span className="ml-2">Qté: {item.quantiteCommande}</span>
               </div>

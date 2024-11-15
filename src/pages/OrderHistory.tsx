@@ -20,7 +20,7 @@ const OrderHistory = () => {
   const { ordersHistory, error, loading } = useFetchOrdersHistory();
   const ordersInProgress = ordersHistory.filter((order) => order.statusCommande === 'payé');
   const [filter, setFilter] = useState<string | undefined>(undefined);
-  console.log(filter)
+  console.log(ordersInProgress)
 
   const types = useFetchTypes("fr");
  console.log("tableau de type",ordersInProgress)
@@ -30,7 +30,7 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
 
   // Initialiser les quantités à 0 pour chaque type de produit
   types.forEach((type) => {
-    productQuantities[type.nomtype] = 0; // Utilise 'nomtype' au lieu de 'nomType'
+    productQuantities[type.nomType] = 0; // Utilise 'nomtype' au lieu de 'nomType'
   });
 
   console.log("Initial productQuantities:", productQuantities);
@@ -41,8 +41,8 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
       order.products.forEach((product) => {
         console.log("Processing product:", product);
 
-        if (productQuantities[product.nomtype] !== undefined) { // Utilise 'nomtype' ici aussi
-          productQuantities[product.nomtype] += product.quantiteCommande;
+        if (productQuantities[product.nomType] !== undefined) { 
+          productQuantities[product.nomType] += product.quantiteCommande;
         }
       });
     }
@@ -53,10 +53,10 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
   // Préparer les données pour le graphique en utilisant les noms des types comme catégories
   return {
     categories: types.map((type) => {
-      console.log("Category type.nomtype:", type.nomtype); // Log des catégories
-      return type.nomtype; // Utilise 'nomtype' ici
+      //console.log("Category type.nomType:", type.nomType); 
+      return type.nomType; // Utilise 'nomtype' ici
     }),
-    seriesData: types.map((type) => productQuantities[type.nomtype] || 0), // Utilise 'nomtype' ici
+    seriesData: types.map((type) => productQuantities[type.nomType] || 0), 
   };
 };
 

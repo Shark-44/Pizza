@@ -1,10 +1,10 @@
 import { useState, ChangeEvent } from "react";
 
-const useProductData = (types: { id: number; nomtype: string }[]) => {
+const useProductData = (types: { id: number; nomType: string }[]) => {
     const [productData, setProductData] = useState({
         photoProduit: "",
         carte: false,
-        type_id: "",
+        typeId: "",
         photoPrevisuale: "",
         photoFile: null as File | null,
     });
@@ -12,8 +12,8 @@ const useProductData = (types: { id: number; nomtype: string }[]) => {
     const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
-            const selectedType = types.find(type => type.id === Number(productData.type_id));
-            const dossier = selectedType ? selectedType.nomtype : "default";
+            const selectedType = types.find(type => type.id === Number(productData.typeId));
+            const dossier = selectedType ? selectedType.nomType : "default";
             const fileName = file.name;
             const fullPath = `/assets/images/${dossier}/${fileName}`;
             

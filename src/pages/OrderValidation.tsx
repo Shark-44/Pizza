@@ -28,7 +28,7 @@ const OrderValidation = () => {
         if (fullOrder) {
             const initialQuantities: { [key: number]: number } = {};
             fullOrder.produits.forEach((product: OrderProduct) => {
-                initialQuantities[product.produit_id] = product.quantiteCommande;
+                initialQuantities[product.produitId] = product.quantiteCommande;
             });
             setQuantities(initialQuantities);
             setActiveProducts(fullOrder.produits);
@@ -48,7 +48,7 @@ const OrderValidation = () => {
 
             setActiveProducts(currentProducts => 
                 currentProducts.map(product => 
-                    product.produit_id === productId 
+                    product.produitId === productId 
                         ? { ...product, quantiteCommande: newQty } 
                         : product
                 )
@@ -65,7 +65,7 @@ const OrderValidation = () => {
         try {
             await deleteBasket(productId, orderId);
             setActiveProducts(currentProducts => 
-                currentProducts.filter(product => product.produit_id !== productId)
+                currentProducts.filter(product => product.produitId !== productId)
             );
             setQuantities((prev) => {
                 const newQuantities = { ...prev };
@@ -81,7 +81,7 @@ const OrderValidation = () => {
 
     const calculateTotal = () => {
         return activeProducts.reduce((total, product) => {
-            const qty = quantities[product.produit_id] || 0;
+            const qty = quantities[product.produitId] || 0;
             return total + product.prixUnitaire * qty;
         }, 0);
     };
@@ -138,19 +138,19 @@ const OrderValidation = () => {
                             </thead>
                             <tbody>
                                 {activeProducts.map((product: OrderProduct) => {
-                                    const qty = quantities[product.produit_id] || 0;
+                                    const qty = quantities[product.produitId] || 0;
                                     const total = product.prixUnitaire * qty;
 
                                     return (
-                                        <tr key={product.produit_id} className="border-t">
+                                        <tr key={product.produitId} className="border-t">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center space-x-4">
                                                     <img
                                                         src={`${API_URL}${product.photoProduit}`}
-                                                        alt={product.nomproduit}
+                                                        alt={product.nomProduit}
                                                         className="w-16 h-16 object-cover rounded"
                                                     />
-                                                    <span className="font-medium">{product.nomproduit}</span>
+                                                    <span className="font-medium">{product.nomProduit}</span>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-right">
@@ -158,11 +158,11 @@ const OrderValidation = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center justify-center space-x-2">
-                                                    {confirmDeletion[product.produit_id] ? (
+                                                    {confirmDeletion[product.produitId] ? (
                                                         <div className="bg-gray-200 p-2 rounded flex items-center space-x-2">
                                                             <span className="text-sm">{t('pageov.choice')}</span>
                                                             <button
-                                                                onClick={() => confirmRemoveProduct(product.produit_id)}
+                                                                onClick={() => confirmRemoveProduct(product.produitId)}
                                                                 className="text-red-500 hover:underline mx-1 text-sm"
                                                             >
                                                                 {t('pageov.yes')}
@@ -170,7 +170,7 @@ const OrderValidation = () => {
                                                             <button
                                                                 onClick={() => setConfirmDeletion(prev => ({
                                                                     ...prev,
-                                                                    [product.produit_id]: false
+                                                                    [product.produitId]: false
                                                                 }))}
                                                                 className="text-blue-500 hover:underline mx-1 text-sm"
                                                             >
@@ -180,24 +180,24 @@ const OrderValidation = () => {
                                                     ) : (
                                                         <>
                                                             <button
-                                                                id={`decrease-${product.produit_id}`}
-                                                                onClick={() => handleQuantityChange(product.produit_id, -1)}
+                                                                id={`decrease-${product.produitId}`}
+                                                                onClick={() => handleQuantityChange(product.produitId, -1)}
                                                                 className="p-1 rounded hover:bg-gray-100"
-                                                                data-tooltip-id={`tooltip-${product.produit_id}`}
+                                                                data-tooltip-id={`tooltip-${product.produitId}`}
                                                             >
                                                                 <Minus className="w-4 h-4" />
                                                             </button>
                                                             {qty === 1 && (
                                                                 <ReactTooltip
-                                                                    id={`tooltip-${product.produit_id}`}
+                                                                    id={`tooltip-${product.produitId}`}
                                                                     place="top"
                                                                     content={t('pageov.content')}
-                                                                    isOpen={showTooltip[product.produit_id]}
+                                                                    isOpen={showTooltip[product.produitId]}
                                                                 />
                                                             )}
                                                             <span className="w-12 text-center">{qty}</span>
                                                             <button
-                                                                onClick={() => handleQuantityChange(product.produit_id, 1)}
+                                                                onClick={() => handleQuantityChange(product.produitId, 1)}
                                                                 className="p-1 rounded hover:bg-gray-100"
                                                             >
                                                                 <Plus className="w-4 h-4" />

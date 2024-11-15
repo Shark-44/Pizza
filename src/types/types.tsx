@@ -38,13 +38,13 @@ export interface ProductHistory {
   quantiteCommande: number;
   nouveauPrix: number;
   nomProduit: string;
-  nomtype: string;
+  nomType: string;
 }
 
 // Type de produit
 export interface Type {
   id: number;
-  nomtype: string;
+  nomType: string;
 }
 
 // Détails de commande simple
@@ -85,7 +85,7 @@ export type UpdateQuantityParams = AddItemParams & {
 };
 
 // Bouton générique
-export interface AppButton {
+export interface Button {
   label: string;
   onClick?: () => void;
   className?: string;
@@ -140,5 +140,5 @@ export interface PriceUpdateRequest {
   dateprix: Date | string;
   ancienPrix: number;
   nouveauPrix: number;
-  produit_id: number;
+  produitId: number;
 } 

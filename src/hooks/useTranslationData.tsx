@@ -3,9 +3,9 @@ import { TranslationItem } from "../types/types";
 
 const useTranslationData = () => {
     const [translationData, setTranslationData] = useState<TranslationItem>({
-        fr: { nomproduit: "", descriptionProduit: "" },
-        gb: { nomproduit: "", descriptionProduit: "" },
-        it: { nomproduit: "", descriptionProduit: "" },
+        fr: { nomProduit: "", descriptionProduit: "" },
+        gb: { nomProduit: "", descriptionProduit: "" },
+        it: { nomProduit: "", descriptionProduit: "" },
     });
 
     const handleTranslationChange = (languageCode: string, field: string, value: string) => {
