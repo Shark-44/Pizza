@@ -9,18 +9,17 @@ import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
 import useFetchOrdersHistory from "../hooks/useFetchOrdersHistory";
 import useFetchTypes from "../hooks/useFetchTypes"; 
 import { calculateTotalSales, calculateTotalPrice, calculateTotalQuantity } from '../utils/orderUtils';
-import { OrdersHistory, Type, FilterOption } from "../types/types";
+import { OrdersHistory, Type } from "../types/types";
 import { useState } from "react";
 
 
 const OrderHistory = () => {
-  /* Pour evoltion avec filter
-   const { ordersHistory, error, loading } = useFetchOrdersHistory(filter);
-  */
-  const { ordersHistory, error, loading } = useFetchOrdersHistory();
-  const ordersInProgress = ordersHistory.filter((order) => order.statusCommande === 'payé');
+
   const [filter, setFilter] = useState<string | undefined>(undefined);
+  const { ordersHistory, error, loading } = useFetchOrdersHistory(filter);
+  const ordersInProgress = ordersHistory.filter((order) => order.statusCommande === 'payé');
  
+
 
   const types = useFetchTypes("fr");
 
@@ -64,11 +63,12 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
   const totalPrice = calculateTotalPrice(ordersInProgress);
   const totalQuantity = calculateTotalQuantity(ordersInProgress);
 
-  const filtersState: FilterOption[] = [
-    FilterOption.TODAY,
-    FilterOption.THIS_WEEK,
-    FilterOption.THIS_MONTH,
-    FilterOption.THIS_YEAR,
+// Pour les filtres mais valeur non envoyée
+  const filtersState = [
+    { label: "Aujourd'hui", value: "D" },
+    { label: "Cette semaine", value: "W" },
+    { label: "Ce mois-ci", value: "M" },
+    { label: "Cette année", value: "Y" },
   ];
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
@@ -175,17 +175,19 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
     <div className="container mx-auto p-4">
       {/* Section des filtres */}
       <div className="flex gap-4 mb-4">
-        {filtersState.map((currentFilter) => (
+      {filtersState.map(({ label, value }) => (
           <button
-            key={currentFilter}
+            key={value}
             className={`px-4 py-2 rounded ${
-              filter === currentFilter ? 'bg-green-500 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'
+              filter === value
+                ? "bg-green-500 text-white"
+                : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
-            onClick={() => handleFilterChange(currentFilter)}
+            onClick={() => handleFilterChange(value)}
           >
-            {currentFilter}
+            {label}
           </button>
-        ))}
+               ))}
       </div>
 
 

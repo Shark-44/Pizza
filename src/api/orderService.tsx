@@ -9,22 +9,27 @@ export const fetchOrders = async (lang: string): Promise<Order[]> => {
     errorNamespace: 'api.fetch.orders',
   });
 };
-/*Pour evolution avec filter
+/*Pour evolution avec filter*/
 export const fetchOrdershistory = async (
   lang: string,
   filter?: string 
 ): Promise<OrdersHistory[]> => {
-  return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
-    params: { lang, ...(filter && { filter }) }, 
+  return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}&filter=${filter}`, {
+    
+    params: {
+      lang,
+      ...(filter ? { filter } : {}),
+    },
     errorNamespace: 'api.fetch.orders',
   });
-}; */
-export const fetchOrdershistory = async (lang: string): Promise<OrdersHistory[]> => {
+  console.log("paramas de filter dans api",filter)
+}; 
+/*export const fetchOrdershistory = async (lang: string): Promise<OrdersHistory[]> => {
   return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
     params: { lang },
     errorNamespace: 'api.fetch.orders',
   });
-};
+};*/
 
 // Créer une nouvelle commande
 export const createOrder = async (

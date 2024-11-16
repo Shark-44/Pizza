@@ -14,7 +14,7 @@ const ProductTableByType = () => {
     const { products, error } = useFetchProducts();
     const [openType, setOpenType] = useState<number | null>(null);
     const [updatedPrices, setUpdatedPrices] = useState<UpdatedPrices>({});
-console.log(products, types)
+//console.log(products, types)
     const toggleType = (typeId: number) => {
         setOpenType(prevType => (prevType === typeId ? null : typeId));
     };
