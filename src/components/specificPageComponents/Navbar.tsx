@@ -71,6 +71,7 @@ function Navbar() {
       const res = await logout();
       setUser(null);
       console.info(res)
+      navigate('/')
     }
     catch (err) {
       console.error("Erreur de connexion :", err); 

@@ -20,27 +20,24 @@ const OrderHistory = () => {
   const { ordersHistory, error, loading } = useFetchOrdersHistory();
   const ordersInProgress = ordersHistory.filter((order) => order.statusCommande === 'payé');
   const [filter, setFilter] = useState<string | undefined>(undefined);
-  console.log(ordersInProgress)
+ 
 
   const types = useFetchTypes("fr");
- console.log("tableau de type",ordersInProgress)
+
 // Préparation des données pour le graphique
 const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
   const productQuantities: { [key: string]: number } = {};
 
   // Initialiser les quantités à 0 pour chaque type de produit
   types.forEach((type) => {
-    productQuantities[type.nomType] = 0; // Utilise 'nomtype' au lieu de 'nomType'
+    productQuantities[type.nomType] = 0; 
   });
 
-  console.log("Initial productQuantities:", productQuantities);
 
   // Parcours des commandes pour accumuler les quantités par type de produit
   orders.forEach((order) => {
     if (order.products) {
       order.products.forEach((product) => {
-        console.log("Processing product:", product);
-
         if (productQuantities[product.nomType] !== undefined) { 
           productQuantities[product.nomType] += product.quantiteCommande;
         }
@@ -48,13 +45,13 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
     }
   });
 
-  console.log("Final productQuantities:", productQuantities);
+
 
   // Préparer les données pour le graphique en utilisant les noms des types comme catégories
   return {
     categories: types.map((type) => {
       //console.log("Category type.nomType:", type.nomType); 
-      return type.nomType; // Utilise 'nomtype' ici
+      return type.nomType;
     }),
     seriesData: types.map((type) => productQuantities[type.nomType] || 0), 
   };
@@ -155,7 +152,7 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
       },
     },
   };
-  console.log(chartData)
+
   // Gestion des erreurs
   if (error) {
     return (
