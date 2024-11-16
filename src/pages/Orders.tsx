@@ -17,7 +17,7 @@ const Orders = () => {
    
 
     const handleAddToBasket = async (product: Product) => { 
-        const existingItem = basket.find(item => item.produit_id === product.id);
+        const existingItem = basket.find(item => item.produitId === product.id);
     
         if (existingItem) {
             const quantiteCommande = existingItem.quantiteCommande + 1;
@@ -28,7 +28,7 @@ const Orders = () => {
     
                 setBasket(prevBasket =>
                     prevBasket.map(item =>
-                        item.produit_id === product.id
+                        item.produitId === product.id
                             ? { ...item, quantiteCommande }
                             : item
                     )
@@ -44,7 +44,7 @@ const Orders = () => {
     
                 setBasket(prevBasket => [
                     ...prevBasket,
-                    { produit_id: product.id, commande_id: orderId, quantiteCommande: 1 }
+                    { produitId: product.id, commandeId: orderId, quantiteCommande: 1 }
                 ]);
             } catch (error) {
                 console.error("Erreur lors de l'ajout au panier :", error);

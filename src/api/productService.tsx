@@ -43,11 +43,11 @@ export const creatproduct = async (
   product: {
       photoProduit: string;
       carte: number;
-      type_id: number;
+      typeId: number;
   },
   translations: Array<{
       language_code: string;
-      nomproduit: string;
+      nomProduit: string;
       descriptionProduit: string;
   }>
 ): Promise<Product> => {

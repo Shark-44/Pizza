@@ -36,7 +36,7 @@ function FilterButtons ({ setIdType }: FilterButtonsProps) {
             {types.map((type) => (
                 <Button 
                     key={type.id} 
-                    label={type.nomtype} 
+                    label={type.nomType} 
                     onClick={() => handleButtonClick(type.id)} 
                     className={"font-satisfy bg-customOrange text-xl"}
                 />

@@ -14,7 +14,7 @@ const ProductTableByType = () => {
     const { products, error } = useFetchProducts();
     const [openType, setOpenType] = useState<number | null>(null);
     const [updatedPrices, setUpdatedPrices] = useState<UpdatedPrices>({});
-
+console.log(products, types)
     const toggleType = (typeId: number) => {
         setOpenType(prevType => (prevType === typeId ? null : typeId));
     };
@@ -36,7 +36,7 @@ const ProductTableByType = () => {
             dateprix: new Date().toISOString().split("T")[0],
             ancienPrix: produit.nouveauPrix,
             nouveauPrix: nouveauPrix,
-            produit_id: productId,
+            produitId: productId,
         };
 
         try {
@@ -59,7 +59,7 @@ const ProductTableByType = () => {
                         onClick={() => toggleType(type.id)}
                         className="w-full text-left p-4 bg-blue-500 text-white rounded"
                     >
-                        {type.nomtype}
+                        {type.nomType}
                     </button>
 
                     {openType === type.id && (
@@ -74,7 +74,7 @@ const ProductTableByType = () => {
                                 </thead>
                                 <tbody>
                                     {products
-                                        .filter(product => product.type_id === type.id)
+                                        .filter(product => product.typeId === type.id)
                                         .map((product) => {
                                             const currentPrice = updatedPrices[product.id] ?? Number(product.nouveauPrix) ?? 0;
 
@@ -82,7 +82,7 @@ const ProductTableByType = () => {
                                                 <tr key={product.id} className="border-t">
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center space-x-4">
-                                                            <span className="font-medium">{product.nomproduit}</span>
+                                                            <span className="font-medium">{product.nomProduit}</span>
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4 text-right">

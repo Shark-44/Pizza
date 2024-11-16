@@ -3,12 +3,12 @@ import { Basket } from '../types/types';
 
 // Ajouter un article au panier
 export const addItem = async (
-  produit_id: number,
-  commande_id: number
+  produitId: number,
+  commandeId: number
 ): Promise<Basket> => {
   const orderData = {
-    produit_id,
-    commande_id,
+    produitId,
+    commandeId,
     quantiteCommande: 1,
   };
 
@@ -20,28 +20,27 @@ export const addItem = async (
 
 // Mettre à jour la quantité d'un article dans le panier
 export const upQuantite = async (
-  produit_id: number,
-  commande_id: number,
+  produitId: number,
+  commandeId: number,
   quantiteCommande: number
 ): Promise<Basket> => {
-  const orderData = {
-    produit_id,
-    commande_id,
+  const BasketData = {
+    produitId,
+    commandeId,
     quantiteCommande,
   };
-
   return apiCall<Basket>('put', '/basket', {
-    data: orderData,
+    data: BasketData,
     errorNamespace: '{lang}.api.updateQuantity.basket',
   });
 };
 
 // Supprimer un article du panier
 export const deleteBasket = async (
-  produit_id: number,
-  commande_id: number
+  produitId: number,
+  commandeId: number
 ): Promise<void> => {
-  const requestData = { produit_id, commande_id };
+  const requestData = { produitId, commandeId };
 
   return apiCall<void>('delete', '/basket', {
     data: requestData,
