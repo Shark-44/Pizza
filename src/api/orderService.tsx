@@ -9,27 +9,21 @@ export const fetchOrders = async (lang: string): Promise<Order[]> => {
     errorNamespace: 'api.fetch.orders',
   });
 };
-/*Pour evolution avec filter*/
+
+// Récupérer toutes les commandes avec historique de prix
 export const fetchOrdershistory = async (
   lang: string,
   filter?: string 
 ): Promise<OrdersHistory[]> => {
   return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}&filter=${filter}`, {
-    
     params: {
       lang,
       ...(filter ? { filter } : {}),
     },
     errorNamespace: 'api.fetch.orders',
   });
-  console.log("paramas de filter dans api",filter)
 }; 
-/*export const fetchOrdershistory = async (lang: string): Promise<OrdersHistory[]> => {
-  return apiCall<OrdersHistory[]>('get', `/ordersforhistory?lang=${lang}`, {
-    params: { lang },
-    errorNamespace: 'api.fetch.orders',
-  });
-};*/
+
 
 // Créer une nouvelle commande
 export const createOrder = async (
@@ -41,7 +35,6 @@ export const createOrder = async (
     timestamp: formattedTimestamp,
     statusCommande: 'en cours',
   };
-
   return apiCall<Order>('post', '/orders', {
     data: orderData,
     errorNamespace: '{lang}.api.create.orders',
@@ -70,7 +63,6 @@ export const finishOrder = async (orderId: number, prixtotalCommande: number): P
     prixtotalCommande,
     statusCommande: 'payé',
   };
-
   return apiCall<Order>('put', `/orders/${orderId}`, {
     data: orderData,
     errorNamespace: '{lang}.api.finish.orders',
