@@ -75,23 +75,23 @@ src/
 │   ├── productService.ts   # Services relatifs aux produits
 │   ├── basketService.ts    # Gestion du panier
 │   ├── orderService.ts     # Gestion des commandes
-│   └── typeService.ts      # Gestion des types de produits
+│   └── typeService.ts      # l'appel des types de produits
 ├── hooks/
-│   ├── useBasket.ts        # Hook pour gérer le panier
-│   ├── useOrder.ts         # Hook pour la gestion des commandes
-│   └── useProduct.ts       # Hook pour charger les produits
+│   ├── useFetchOrderHistory.ts   # Hook pour charger les data de OrderHistory
+│   ├── useFetchOrder.ts          # Hook pour lancer une commande avec un nouveau numero
+│   └── useProduct.ts             # Hook pour charger les produits
 └── types/
-    ├── Product.ts          # Définition des types de produits
-    ├── Basket.ts           # Définition du type panier
-    └── Order.ts            # Définition du type commande
+    └── types.ts            # Définition des types 
 
 6. Internationalisation (i18n)
 
 Le projet supporte plusieurs langues grâce à l'internationalisation. L'API permet de récupérer les données des produits dans la langue de l'utilisateur, facilitant ainsi l'adaptation du kiosque pour différents marchés.
 
     Structure des fichiers : Les chaînes de texte spécifiques à chaque langue sont stockées dans des fichiers séparés (par exemple, en.json, fr.json) et récupérées par l'API en fonction de la langue demandée.
+    
+7. La partie Admin, l'acces par une combinaison de clés clavier nous amene a un login qui récupere un cookies. Ce dernier via authContext autorise l'acces aux pages admin. Ces pages permettent de creer un admin, un produit, modifier les prix et un dashboard sur les ventes. 
 
-7. Conclusion
+8. Conclusion
 
 Cette API vise à offrir une structure claire et professionnelle pour la gestion des commandes et produits d’un kiosque de commande. Elle est conçue pour être évolutive, maintenable, et flexible, tout en permettant une intégration facile avec l'interface utilisateur en front-end. En séparant la logique d'accès aux données, les hooks personnalisés et les types de données, nous assurons un code propre et facile à faire évoluer à mesure que de nouvelles fonctionnalités sont ajoutées.
 
@@ -100,5 +100,4 @@ Il y aussi une particuliarité que j'ai pensé a la bdd. C'est a la factorisatio
 Points clés à développer dans la suite :
 
     Tests unitaires et d'intégration pour chaque endpoint.
-    Sécurisation des endpoints (authentification, validation des données).
     Gestion des erreurs et des réponses API standardisées (par exemple, en cas de produit non trouvé ou de panier vide).

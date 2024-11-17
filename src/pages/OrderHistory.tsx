@@ -73,7 +73,7 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
   };
-
+// console.log(chartData)
   // Configuration du graphique en barres
   const chartConfig = {
     type: "bar",
@@ -162,14 +162,14 @@ const prepareChartData = (orders: OrdersHistory[], types: Type[]) => {
     );
   }
 
-  // Gestion du chargement
-  if (loading) {
+  // Gestion du chargement ajoute un effet de latence
+  /*if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-yellow-50">
         <p className="text-blue-500">Chargement des données...</p>
       </div>
     );
-  }
+  }*/
 
   return (
     <div className="container mx-auto p-4">

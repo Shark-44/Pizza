@@ -9,7 +9,7 @@ const useFetchOrdersHistory = (filter?: string) => {
 
     useEffect(() => {
         const fetchFullData = async () => {
-            console.log("dans ma hook", filter)
+            
             try {
                 setLoading(true);
                 const data = await fetchOrdershistory("fr", filter);

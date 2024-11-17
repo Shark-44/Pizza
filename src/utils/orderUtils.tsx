@@ -7,7 +7,9 @@ export const calculateTotalSales = (orders: any[]) => {
   
   // Calcul de la somme des prix
   export const calculateTotalPrice = (orders: OrdersHistory[]) => {
-    return orders.reduce((sum, order) => sum + Number(order.prixtotalCommande), 0);
+    return orders
+      .reduce((sum, order) => sum + Number(order.prixtotalCommande), 0)
+      .toFixed(2);
   };
   
   // Calcul de la quantité totale des produits vendus
