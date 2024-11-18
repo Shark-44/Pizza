@@ -1,4 +1,5 @@
 import LoginCard from "../components/specificPageComponents/LoginCard";
+import TextWelcome from "../components/specificPageComponents/TextWelcome";
 import { useAuthContext } from "../contexts/authContexts";
 
 const Admin = () => {
@@ -6,7 +7,7 @@ const Admin = () => {
 
     return (
         <div>
-            {user? (<h2>Bienvenu</h2>):(<LoginCard />)}
+            {user? (<TextWelcome />):(<LoginCard />)}
             
         </div>
     )
